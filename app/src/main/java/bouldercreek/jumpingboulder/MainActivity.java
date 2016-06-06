@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
 
@@ -23,7 +24,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
-    private void quickGameButtonOnClick(View v){
+    public void quickGameButtonOnClick(View v){
+        Button button = (Button) v;
+        ((Button) v).setText("HEj");
 
     }
 }
