@@ -1,13 +1,14 @@
 package bouldercreek.jumpingboulder;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class MainActivity extends Activity {
+/**
+ * Created by Kristian on 06-06-2016.
+ */
+public class GameActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +22,5 @@ public class MainActivity extends Activity {
 
 
         setContentView(R.layout.activity_main);
-    }
-
-    private void quickGameButtonOnClick(View v){
-
     }
 }
