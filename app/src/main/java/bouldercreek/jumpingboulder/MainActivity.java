@@ -9,7 +9,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +27,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void quickGameButtonOnClick(View v){
-        Button button = (Button) v;
-        Intent i = new Intent(getApplicationContext(),QuickGameRoom.class);
-        startActivity(i);
 
+    button = (Button) findViewById(R.id.button);
+
+    button.setOnClickListener(new View.OnClickListener(){
+        @Override;
+        public void OnClick(View v){
+
+    }
+
+
+
+    public void quickGameButtonOnClick(View v){
+        Intent startGame = new Intent(this, GameActivity.class);
+        startActivity(startGame);
     }
 }
