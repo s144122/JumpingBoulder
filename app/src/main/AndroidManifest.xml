@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        android:screenOrientation="landscape"
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +18,10 @@
         </activity>
 
 
-        <activity android:name=".GameActivity">
+        <activity
+            android:screenOrientation="landscape"
+            android:name=".GameActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
