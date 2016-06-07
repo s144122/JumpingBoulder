@@ -61,9 +61,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     {
         return super.onTouchEvent(event);
     }
+    //Rykker baggrunden
     public void update(){
         bg.update();
-
     }
 
     @Override

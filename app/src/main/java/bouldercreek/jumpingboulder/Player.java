@@ -14,7 +14,7 @@ public class Player extends GameObject{
     private double dya;
     private boolean up;
     private boolean playing;
-    private Animation animation = new Animation();
+//    private Animation animation = new Animation();
     private long startTime;
 
     public Player(Bitmap res, int w, int h, int numFrames){
@@ -31,8 +31,8 @@ public class Player extends GameObject{
         image[i] = Bitmap.createBitmap(spritesheet,i*width , 0, width,height);
         }
 
-        animation.setFrames(image);
-        animation.setDelay(10);
+//        animation.setFrames(image);
+//        animation.setDelay(10);
         startTime = System.nanoTime();
     }
 
@@ -61,9 +61,9 @@ public class Player extends GameObject{
         dy = 0;
     }
 
-    public draw(Canvas canvas){
-        canvas.drawBitmap(animation.getImage(),x,y,null);
-    }
+//    public draw(Canvas canvas){
+//        canvas.drawBitmap(animation.getImage(),x,y,null);
+//    }
     public int getScore(){return score;}
     public boolean getPlaying(){return playing;}
     public void setPlaying(boolean b){playing = b;}

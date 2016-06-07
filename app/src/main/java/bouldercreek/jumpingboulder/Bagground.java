@@ -17,7 +17,7 @@ public class Bagground {
 
     //Update bagground each loop, and move the bagground dx so the bagground moves
     public void update(){
-        x+= dx;
+        //x+= dx;
     }
     public void draw(Canvas canvas){
         canvas.drawBitmap(image, x, y, null);
