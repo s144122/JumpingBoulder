@@ -28,18 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    button = (Button) findViewById(R.id.button);
-
-    button.setOnClickListener(new View.OnClickListener(){
-        @Override;
-        public void OnClick(View v){
-
-    }
-
-
-
     public void quickGameButtonOnClick(View v){
-        Intent startGame = new Intent(this, GameActivity.class);
-        startActivity(startGame);
+        startActivity(new Intent(this, QuickGameRoom.class));
     }
 }
