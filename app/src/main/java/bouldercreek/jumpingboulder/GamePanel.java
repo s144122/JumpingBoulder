@@ -13,6 +13,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static final int WIDTH = 1669;
     public static final int HEIGHT = 769;
+    public static final int MOVESPEED = -5;
     private MainTread thread;
     private Bagground bg;
 
@@ -67,7 +68,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void draw(Canvas canvas){
-        final float scaleFactor = Math.min( getWidth() / 208.f, getHeight() / 160.f );
+        final float scaleFactor = Math.min( getWidth() / (WIDTH*1.f), getHeight() / (HEIGHT*1.f));
         final int savedState = canvas.save();
         canvas.scale(scaleFactor, scaleFactor);
         bg.draw(canvas);
