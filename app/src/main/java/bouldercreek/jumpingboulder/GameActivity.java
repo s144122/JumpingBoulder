@@ -11,14 +11,11 @@ import android.widget.Button;
 /**
  * Created by Kristian on 06-06-2016.
  */
-public class GameActivity extends Activity{
+public class GameActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //turn titel off
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         //set to full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
