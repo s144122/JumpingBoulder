@@ -12,17 +12,15 @@ public class Bagground {
 
     public Bagground(Bitmap res){
         image = res;
+//        dx = GamePanel.MOVESPEED;
     }
 
     //Update bagground each loop, and move the bagground dx so the bagground moves
     public void update(){
-        x+= dx;
+        //x+= dx;
     }
     public void draw(Canvas canvas){
         canvas.drawBitmap(image, x, y, null);
     }
 
-    public void setVector(int dx){
-        this.dx = dx;
-    }
 }
