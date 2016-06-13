@@ -12,7 +12,7 @@ public class Bagground {
 
     public Bagground(Bitmap res){
         image = res;
-        dx = GamePanel.MOVESPEED;
+//        dx = GamePanel.MOVESPEED;
     }
 
     //Update bagground each loop, and move the bagground dx so the bagground moves
