@@ -9,32 +9,30 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
+
 
 
 public class MainActivity extends AppCompatActivity {
 
-
+    Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //turn titel off
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        //set to full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
 
-    }
+        button = (Button) findViewById(R.id.BT);
 
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent startGame = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(startGame);
+            }
 
-    public void quickGameButtonOnClick(View v){
-        //startActivity(new Intent(this, QuickGameRoom.class));
+        });
     }
 
 }
