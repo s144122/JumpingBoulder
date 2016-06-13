@@ -17,7 +17,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contextClickable="true"
-        android:clickable="true"
-        android:onClick="quickGameButtonOnClick" />
+        android:clickable="true" />
 
 </RelativeLayout>
