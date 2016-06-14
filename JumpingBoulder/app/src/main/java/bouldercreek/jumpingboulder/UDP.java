@@ -2,62 +2,50 @@ package bouldercreek.jumpingboulder;
 
 import android.os.AsyncTask;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * Created by jakob on 08-06-2016.
  */
 public class UDP{
-    final String serverIP = "10.16.172.118";
-    final int serverPort = 1302;
+    final static String serverIP = "10.16.172.118";
+    final static int serverPort = 1302;
     public static int serverId = Integer.MIN_VALUE;
+
+    private static InetAddress ip = null;
     private static DatagramSocket socket = null;
-    private static DatagramPacket incoming = null;
-    private static byte[] buffer = new byte[2048];
 
+    public static void setUp() throws IOException {
+        ip = InetAddress.getByName(serverIP);
+        socket = new DatagramSocket(serverPort, ip);
+        System.out.println("UDP - setUp - Socket established to server, getting id...");
+        sendData(new byte[]{0,0,0,0});
+        serverId = ByteConversion.convertByteToInt(receiveData());
+        System.out.println("UDP - setUp - New server id is:");
 
-    public static boolean requestGame(){
-
-
-
-
-        return false;
     }
 
-    public static boolean sendCoordinates(){
-
-
-
-        return false;
+    private static byte[] receiveData() throws IOException {
+        byte[] data = new byte[1024];
+        DatagramPacket recivePacket = new DatagramPacket(data, data.length);
+        socket.receive(recivePacket);
+        return recivePacket.getData();
     }
 
-    public static float[] recieveCoordinates(){
-        float x = 0;
-        float y = 0;
 
-        try {
-            socket.receive(incoming);
-            byte[] data = incoming.getData();
-            int clientId = Database.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
+    private static void sendData(byte[] data) throws IOException {
+        DatagramPacket sendPacket = new DatagramPacket(data, data.length, ip, serverPort);
+        socket.send(sendPacket);
 
-
-            //echo the details of incoming data - client ip : client port - client message
-            System.out.println(incoming.getAddress().getHostAddress() + " : " + incoming.getPort() + " - " + clientId);
-
-                /*DatagramPacket dp = new DatagramPacket(Database.convertIntToByte(clientId) ,
-                        Database.convertIntToByte(clientId).length ,
-                        incoming.getAddress() ,
-                        incoming.getPort());
-                socket.send(dp);*/
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return new float[]{x,y};
     }
+
 
 }

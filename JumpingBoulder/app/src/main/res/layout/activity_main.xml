@@ -20,4 +20,13 @@
         android:clickable="true"
         android:onClick="quickGameButtonOnClick" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/ServerConnectionError"
+        android:layout_above="@+id/BT"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp" />
+
 </RelativeLayout>

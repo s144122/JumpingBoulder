@@ -1,7 +1,7 @@
 /**
  * Created by jakob on 13-06-2016.
  */
-public class UDPConversion {
+public class ByteConversion {
 
     //METHODS TO CONVERT TYPES TO BYTE ARRAYS  #######################################
     public static byte[] convertToByte(int x){

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
 
+import static java.lang.Integer.BYTES;
 import static java.lang.Integer.toBinaryString;
 
 
@@ -25,7 +26,7 @@ public class Main {
             while(true){
                 socket.receive(incoming);
                 byte[] data = incoming.getData();
-                int clientId = Database.convertByteToInt(new byte[]{data[0],data[1],data[2],data[3]});
+                int clientId = ByteConversion.convertByteToInt(new byte[]{data[0],data[1],data[2],data[3]});
 
 
 
