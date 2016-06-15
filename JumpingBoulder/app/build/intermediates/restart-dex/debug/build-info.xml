@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="armeabi-v7a,armeabi"
+    api-level="23"
+    density="xxhdpi"
+    format="7"
+    timestamp="170756521386111"
+    token="-1051084203706882313" >
+
+    <task
+        name="javac"
+        duration="1368" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="80" />
+    <task
+        name="verifier"
+        duration="46" />
+
+    <artifact
+        location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\outputs\apk\app-debug.apk"
+        type="MAIN" />
+
+    <build timestamp="170756521386111" >
+        <artifact
+            location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\outputs\apk\app-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>
