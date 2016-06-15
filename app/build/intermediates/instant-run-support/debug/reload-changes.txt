@@ -1,0 +1,2 @@
+CHANGED,C:\Users\Kristian\Desktop\Skole sager\DTU\2. Semester\34318 PNi\JumpingBoulder\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\bouldercreek\jumpingboulder\Player$override.class
+CHANGED,C:\Users\Kristian\Desktop\Skole sager\DTU\2. Semester\34318 PNi\JumpingBoulder\app\build\intermediates\transforms\instantRun\debug\folders\4000\5\enhanced\com\android\tools\fd\runtime\AppPatchesLoaderImpl.class

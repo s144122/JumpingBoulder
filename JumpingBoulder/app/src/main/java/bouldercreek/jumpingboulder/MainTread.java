@@ -12,6 +12,7 @@ public class MainTread extends Thread
     private GamePanel gamePanel;
     private boolean running;
     public static Canvas canvas;
+    private long timeMillis;
 
     public MainTread(SurfaceHolder surfaceHolder, GamePanel gamePanel)
     {
@@ -23,12 +24,12 @@ public class MainTread extends Thread
     public void run()
     {
         long startTime;
-        long timeMillis;
         long waitTime;
         long totalTime = 0;
         int frameCount =0;
         int FPS = 30;
         long targetTime = 1000/ FPS;
+
 
         while(running) {
             startTime = System.nanoTime();
@@ -77,4 +78,5 @@ public class MainTread extends Thread
     public void setRunning(boolean b){
         running=b;
     }
+    public long getTimeMillis(){return timeMillis;}
 }
