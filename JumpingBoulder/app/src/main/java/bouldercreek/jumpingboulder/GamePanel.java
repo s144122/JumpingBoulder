@@ -177,7 +177,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public Player getOpponent() {
-        return opponent;
+    public Player getOpponent(boolean isPlayer) {
+        if(isPlayer) {
+            return opponent;
+        }
+        return player;
     }
 }
