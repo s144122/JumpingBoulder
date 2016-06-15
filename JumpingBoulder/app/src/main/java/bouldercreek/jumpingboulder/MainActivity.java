@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     return "Connection successful";
                 } catch (IOException e) {
                     e.printStackTrace();
-                    publishProgress("Could not connect to server");
+                    publishProgress("Could not connect to server..." + i);
                 }
             }
 

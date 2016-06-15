@@ -4,37 +4,30 @@
     api-level="23"
     density="xxhdpi"
     format="7"
-    timestamp="101446653543967"
+    timestamp="170756521386111"
     token="-1051084203706882313" >
 
     <task
         name="javac"
-        duration="0" />
+        duration="1368" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="80" />
     <task
         name="verifier"
-        duration="0" />
+        duration="46" />
 
-    <build timestamp="100482365493897" >
+    <artifact
+        location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\outputs\apk\app-debug.apk"
+        type="MAIN" />
+
+    <build timestamp="170756521386111" >
         <artifact
             location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
     </build>
-    <build timestamp="100891638836097" >
-        <artifact
-            location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\intermediates\res\resources-debug.ap_"
-            type="RESOURCES" />
-    </build>
-    <build timestamp="101400120754039" >
-        <artifact
-            location="C:\Users\jakob\Documents\DTU\juni\JumpingBoulder\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_8\classes.dex"
-            type="DEX" />
-    </build>
-    <build timestamp="101446653543967" />
 
 </instant-run>
