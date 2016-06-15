@@ -3,6 +3,7 @@ package bouldercreek.jumpingboulder;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -56,8 +57,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         bg = new Bagground(BitmapFactory.decodeResource(getResources(), R.drawable.whitebagground));
-        player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.player), 30, 30, 1);
-        opponent = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.player),30, 30,1);
+
+        player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.kristian), 30, 30, 1,true,this);
+        opponent = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.jakob),30, 30,1,false,this);
+
         topborder = new ArrayList<TopBorder>();
         botborder = new ArrayList<BotBorder>();
         this.updateBottomBorder();
@@ -94,7 +97,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         if (player.getPlaying()) {
             player.update();
+            //collisionPlayerOpponent();
+            //System.out.println("player (x,y) = "+"("+player.x+","+player.y+")");
+            //System.out.println("opponent (x,y) = "+"("+opponent.x+","+opponent.y+")");
+            //System.out.println(player.getRectangle());
         }
+    }
+    public void movementOpponent(float x, float y,long time){
+        opponent.setClickX(x);
+        opponent.setClickY(y);
     }
 
 
@@ -108,7 +119,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         opponent.draw(canvas);
         canvas.restoreToCount(savedState);
 
-        //draw borders
+        //draw collision
         for(BotBorder bb: botborder){
             bb.draw(canvas);
         }
@@ -118,12 +129,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-//    public boolean collision(GameObject a, GameObject b) {
-//        if (Rect.intersects(a.getRectangle(), b.getRectangle())) {
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean collision(Player a, Player b) {
+        if (Rect.intersects(a.getRectangle(), b.getRectangle())) {
+            //System.out.println(a.getRectangle());
+            //System.out.println(b.getRectangle());
+            return true;
+        }
+        return false;
+    }
+
+    public void collisionPlayerOpponent(){
+        //System.out.println(collision(opponent,player));
+        if(collision(player,opponent)){
+            player.dx = 0;
+            player.dy = 0;
+            opponent.dx = 0;
+            opponent.dy = 0;
+            if(opponent.getRectangle() == player.getRectangle()){
+                opponent.x = player.x + opponent.width;
+                opponent.y = player.y + opponent.height;
+            }
+
+        }
+
+    }
 
     public void updateBottomBorder(){
         //Create bottom border
@@ -148,4 +177,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public Player getOpponent() {
+        return opponent;
+    }
 }
