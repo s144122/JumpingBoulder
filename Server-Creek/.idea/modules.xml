@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KonverteringHjælpemetoder/KonverteringHjælpemetoder.iml" filepath="$PROJECT_DIR$/KonverteringHjælpemetoder/KonverteringHjælpemetoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/Server-Creek.iml" filepath="$PROJECT_DIR$/Server-Creek.iml" />
     </modules>
   </component>

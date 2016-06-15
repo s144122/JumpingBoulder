@@ -17,14 +17,13 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contextClickable="true"
-        android:clickable="true"
-        android:onClick="quickGameButtonOnClick" />
+        android:clickable="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/ServerConnectionError"
+        android:id="@+id/ServerConnectionText"
         android:layout_above="@+id/BT"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="35dp" />

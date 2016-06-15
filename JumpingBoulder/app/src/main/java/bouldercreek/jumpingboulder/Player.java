@@ -2,118 +2,135 @@ package bouldercreek.jumpingboulder;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.util.DisplayMetrics;
 
 /**
  * Created by Kristian on 07-06-2016.
  */
-public class Player extends GameObject{
-
-    private Bitmap spritesheet;
-    private int score;
-    private double dya;
-    private double dxa;
+public class Player extends GameObject {
     private boolean screentoch;
-    private boolean playing;
+    private boolean playing = true;
     private float clickX;
     private float clickY;
     private Animation animation = new Animation();
     private long startTime;
+    private int touchDelay;
 
 
-    public Player(Bitmap res, int w, int h, int numFrames){
+    public Player(Bitmap res, int w, int h, int numFrames) {
         x = 100;
         y = 400;
 
-
-        //GamePanel.HEIGHT/2;
         dy = 0;
         dx = 0;
-        score = 0;
         height = h;
         width = w;
 
         Bitmap[] image = new Bitmap[numFrames];
-        spritesheet = res;
+        Bitmap spritesheet = res;
 
-        for (int i = 0; i < image.length; i++){
-            image[i] = Bitmap.createBitmap(spritesheet,i*width , 0, width,height);
+        for (int i = 0; i < image.length; i++) {
+            image[i] = Bitmap.createBitmap(spritesheet, i * width, 0, width, height);
         }
 
         animation.setFrames(image);
-        animation.setDelay(10);
+        animation.setDelay();
         startTime = System.nanoTime();
     }
 
-
-    public void screenTouch(boolean b){
-        screentoch = b;}
-
-    public void getClickX(float f){clickX = f;}
-    public void getClickY(float f){clickY = f;}
-
-
-
-
-    public void update(){
-        long elapsed = (System.nanoTime()-startTime)/1000000;
-        if(elapsed>100){
-            score++;
+    public void update() {
+        long elapsed = (System.nanoTime() - startTime) / 1000000;
+        if (elapsed > 100) {
             startTime = System.nanoTime();
         }
+        playerMovment();
+        if(touchDelay > 0){
+            touchDelay--;
+        }
+    }
 
-        if (screentoch) {
-            if (clickX > GamePanel.WIDTH / 2) {
-                dy = (int) (dya -= 0.5);
-                dx = (int) (dxa += 1);
+    public void draw(Canvas canvas) {
+        canvas.drawBitmap(animation.getImage(), x, y, null);
+    }
 
-            } else if (clickX < GamePanel.WIDTH / 2) {
-                dy = (int) (dya -= 0.5);
-                dx = (int) (dxa -= 1);
+    public boolean getPlaying() {
+        return playing;
+    }
+    public void setPlaying(boolean b) {
+        playing = b;
+    }
+    public void setClickX(float f) {
+        clickX = f;
+    }
+    public void setClickY(float f) {
+        clickY = f;
+    }
+    public void screenTouch(boolean b) {
+        screentoch = b;
+    }
+
+    DisplayMetrics displaymetrics = new DisplayMetrics();
+    int Height = displaymetrics.heightPixels;
+    int Width = displaymetrics.widthPixels;
+
+    public void borders() {
+        //Bottom border
+        if (y >= 388 && dy>0) {
+            y = 388;
+            dy = 0;
+            dx = dx * 0.5;
+        }
+        //Top border
+        if (y < 24) {
+            y = 24;
+            dy = 0;
+            touchDelay = 25;
+        }
+        //Rigth border
+        if (x > 805) {
+            x = 805;
+            dx = dx *-0.5;
+        }
+        //Left border
+        if (x < 5) {
+            x = 5;
+            dx = dx * -0.5;
+        }
+    }
+
+    public void playerMovment() {
+
+        //Touch click
+        if (screentoch && touchDelay == 0) {
+            touchDelay = 15;
+            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
+                dy = -15;
+                dx = 10;
+
+            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
+                dy = -15;
+                dx = -10;
             }
-
         }
-        else {
-            dy = (int) (dya += 0.1);
-        }
-//        if(dy > 14){dy = 14;}
-//        if(dy < -14){dy = -14;}
-//        if(dx > 14){dx = 14;}
-//        if(dx < -14){dx = 14;}
-
+        borders();
         y += dy;
-        dy = 0;
+        dy += 1;
         x += dx;
-        dx = 0;
 
-        if (y > 400){
-            dy = 0;
-            dya = -1;
+        //Gravity
+        //dy = (int) (dya += 0.1);
+        dy += 0.1;
+
+        //Deceleration in x
+        if (dx > 0) {
+            dx -= 0.2;
+        }
+        if (dx < 0) {
+            dx += 0.2;
 
         }
-        if (y < 24){
-            dy = 0;
-            dya = 1;
-
-        }
-        if (x > 810){
-            dx = 0;
-            dxa = -1;
-        }
-
-        if (x < 5){
-            dx = 0;
-            dxa = 1;
-        }
+        borders();
 
     }
 
-    public void draw(Canvas canvas){
-        canvas.drawBitmap(animation.getImage(),x,y,null);
-    }
-    public int getScore(){return score;}
-    public boolean getPlaying(){return playing;}
-    public void setPlaying(boolean b){playing = b;}
-    public void resetDYA(){dya = 0;}
-    public void resetScore(){score = 0;}
 }

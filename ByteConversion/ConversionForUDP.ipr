@@ -174,7 +174,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ByteConversion.iml" filepath="$PROJECT_DIR$/ByteConversion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/byteConversion.iml" filepath="$PROJECT_DIR$/byteConversion.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">

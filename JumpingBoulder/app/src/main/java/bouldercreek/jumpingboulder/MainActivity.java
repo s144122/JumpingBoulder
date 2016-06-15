@@ -1,13 +1,10 @@
 package bouldercreek.jumpingboulder;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,26 +36,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class serverSetUp extends AsyncTask<Void,Void,String>{
+    private class serverSetUp extends AsyncTask<Void,String,String>{
 
 
         @Override
         protected String doInBackground(Void... params) {
-            try {
-                UDP.setUp();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "Could not connect to server";
+            for(int i=0; i<3; i++) {
+                try {
+                    UDP.setUp();
+                    return "Connection successful";
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    publishProgress("Could not connect to server");
+                }
             }
 
             return null;
         }
 
         @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+
+            TextView text = (TextView) findViewById(R.id.ServerConnectionText);
+            text.setText(values[0]);
+
+        }
+
+        @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            TextView errorMsg = (TextView) findViewById(R.id.ServerConnectionError);
-            errorMsg.setText(s);
+            TextView text = (TextView) findViewById(R.id.ServerConnectionText);
+            text.setText(s);
         }
     }
 

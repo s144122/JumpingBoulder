@@ -28,7 +28,8 @@ public class UDP{
         socket = new DatagramSocket(serverPort, ip);
         System.out.println("UDP - setUp - Socket established to server, getting id...");
         sendData(new byte[]{0,0,0,0});
-        serverId = ByteConversion.convertByteToInt(receiveData());
+        byte[] data = receiveData();
+        serverId = ByteConversion.convertByteToInt(new byte[]{data[0],data[1],data[2],data[3]});
         System.out.println("UDP - setUp - New server id is:");
 
     }
