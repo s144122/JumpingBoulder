@@ -32,8 +32,6 @@ public abstract class GameObject {
     public int getWidth(){
         return width;
     }
-    public Rect getRectangle(){
-        return new Rect(x,y, x+width, y+height);
-    }
+
 
 }
