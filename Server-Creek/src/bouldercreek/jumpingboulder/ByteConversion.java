@@ -33,9 +33,9 @@ public class ByteConversion {
     //METHODS TO CONVERT BYTE ARRAYS TO OTHER NUMBER TYPES #######################
     public static int convertByteToInt(byte[] b){
         testLength(b,"int", 4);
-        int x = b[0];
-        for(int i=1; i<b.length; i++){
-            x += b[i]<<(8*i);
+        int x = 0;
+        for(int i=0; i<b.length; i++){
+            x += (b[i]&0b11111111)<<(8*i);
         }
 
         return x;

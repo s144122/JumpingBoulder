@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+
+        System.out.println("Creating AsyncTask for connection");
         new serverSetUp().execute();
 
         button = (Button) findViewById(R.id.BT);
@@ -41,17 +43,23 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            for(int i=0; i<3; i++) {
+            //System.out.println("Async Task for network created");
+            for(int i=0; i<5; i++) {
                 try {
                     UDP.setUp();
                     return "Connection successful";
                 } catch (IOException e) {
                     e.printStackTrace();
-                    publishProgress("Could not connect to server..." + i);
+                    publishProgress("Connecting..." + i);
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
 
-            return null;
+            return "Could not connect to server";
         }
 
         @Override

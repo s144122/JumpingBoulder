@@ -17,6 +17,9 @@ public class ByteConversionTest {
         assertEquals(1, ByteConversion.convertByteToInt(b));
         b[1] = 0b00000001;
         assertEquals(257, ByteConversion.convertByteToInt(b));
+        b[1] = 0;
+        b[0] = -1;
+        assertEquals(0b11111111, ByteConversion.convertByteToInt(b));
 
 
     }
@@ -35,6 +38,10 @@ public class ByteConversionTest {
     public void convertBackAndForthIntTest() throws Exception{
         int x = 2345;
         assertEquals(x, ByteConversion.convertByteToInt(ByteConversion.convertToByte(x)));
+        x = Integer.MIN_VALUE;
+        assertEquals(x, ByteConversion.convertByteToInt(ByteConversion.convertToByte(x)));
+        x = Integer.MAX_VALUE;
+        assertEquals(x, ByteConversion.convertByteToInt(ByteConversion.convertToByte(x)));
     }
 
 
@@ -46,7 +53,10 @@ public class ByteConversionTest {
         assertEquals(x, ByteConversion.convertByteToLong(b));
         b[1] = 0b00000001;
         assertEquals(x+256, ByteConversion.convertByteToLong(b));
-
+        b[1] = 0;
+        b[0] = -1;
+        b[4] = 0;
+        assertEquals(0b11111111L, ByteConversion.convertByteToLong(b));
     }
 
     @Test
@@ -61,6 +71,10 @@ public class ByteConversionTest {
     @Test
     public void convertBackAndForthLongTest() throws Exception{
         long x = 46491427907797663L;
+        assertEquals(x, ByteConversion.convertByteToLong(ByteConversion.convertToByte(x)));
+        x = Long.MIN_VALUE;
+        assertEquals(x, ByteConversion.convertByteToLong(ByteConversion.convertToByte(x)));
+        x = Long.MAX_VALUE;
         assertEquals(x, ByteConversion.convertByteToLong(ByteConversion.convertToByte(x)));
     }
 
