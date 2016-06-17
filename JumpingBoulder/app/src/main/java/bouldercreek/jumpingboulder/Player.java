@@ -10,12 +10,14 @@ import android.util.DisplayMetrics;
  */
 public class Player extends GameObject {
     private boolean screentoch;
+    private boolean screentochEnd;
     private boolean playing = true;
     private float clickX;
     private float clickY;
     private Animation animation = new Animation();
     private long startTime;
     private int touchDelay;
+    private double jumpForce;
     public int x;
     public int y;
     public int XL;
@@ -47,6 +49,8 @@ public class Player extends GameObject {
         XR = getXR(x);
         YDown = getYDown(y);
         YUp = getYUp(y);
+
+        jumpForce = 0.5;
 
         lastXL = XL;
         lastXR = XR;
@@ -80,6 +84,7 @@ public class Player extends GameObject {
         if (elapsed > 100) {
             startTime = System.nanoTime();
         }
+        playerJump();
         playerMovment();
         if(touchDelay > 0){
             touchDelay--;
@@ -89,7 +94,6 @@ public class Player extends GameObject {
         XR = getXR(x);
         YDown = getYDown(y);
         YUp = getYUp(y);
-
 
         lastXL = getXL(lastX);
         lastXR = getXR(lastX);
@@ -126,9 +130,16 @@ public class Player extends GameObject {
     public void setClickY(float f) {
         clickY = f;
     }
-    public void screenTouch(boolean b) {
+    public void setScreenTouch(boolean b) {
         screentoch = b;
     }
+    public void setScreenTouchEnd(boolean b) {
+    screentochEnd = b;
+    }
+    public boolean getScreenTouch(){return screentoch;}
+    public boolean getScreenTouchEnd(){return screentochEnd;}
+
+
     public Rect getRectangle(){
         return new Rect(x,y, x+width, y+height);
     }
@@ -138,7 +149,7 @@ public class Player extends GameObject {
     int Width = displaymetrics.widthPixels;
 
     public void collision() {
-
+/*
         System.out.println("playerXL = " + XL);
         System.out.println("playerXR = " + XR);
         System.out.println("player YUp: " + YUp);
@@ -159,6 +170,7 @@ public class Player extends GameObject {
         System.out.println("opponent lastXR = " + gamePanel.getOpponent(isMe).lastXR);
         System.out.println("opponent lastYUp = " + gamePanel.getOpponent(isMe).lastYUp);
         System.out.println("opponent lastYDown = " + gamePanel.getOpponent(isMe).lastYDown);
+        */
         //Bottom border
         if (y >= 388 && dy>0) {
             y = 388;
@@ -194,21 +206,21 @@ public class Player extends GameObject {
         //player collision
         //Rigth side of player
         if(inBetween(XR,OXR,OXL) && !inBetween(lastXR,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
-            System.out.println("Player right side jumped into opponent, current x:"+ x);
+            //System.out.println("Player right side jumped into opponent, current x:"+ x);
             x = getXL(gamePanel.getOpponent(isMe).XL)-2;
-            System.out.println("Player x-speed pre collission: "+dx);
+            //System.out.println("Player x-speed pre collission: "+dx);
             dx = dx*(-1);
-            System.out.println("Player x-speed post collission: "+dx);
-            System.out.println("Player right side jumped into opponent, current x:"+ x);
+            //System.out.println("Player x-speed post collission: "+dx);
+            //System.out.println("Player right side jumped into opponent, current x:"+ x);
         }
         //Left side of player
         if(inBetween(XL,OXR,OXL) && !inBetween(lastXL,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
-            System.out.println("Player left side jumped into opponent, current x:"+ x);
+            //System.out.println("Player left side jumped into opponent, current x:"+ x);
             x = getXR(gamePanel.getOpponent(isMe).XR)+2;
-            System.out.println("Player x-speed pre collission: "+dx);
+            //System.out.println("Player x-speed pre collission: "+dx);
             dx = dx*(-1);
-            System.out.println("Player x-speed post collission: "+dx);
-            System.out.println("Player left side jumped into opponent, current x:"+ x);
+            //System.out.println("Player x-speed post collission: "+dx);
+            //System.out.println("Player left side jumped into opponent, current x:"+ x);
         }
 
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
@@ -219,12 +231,11 @@ public class Player extends GameObject {
         if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
             dy = 0;
-            System.out.println("Player came from top, current y: " +y);
-            setPlaying(false);
-            System.out.println("Game STOP");
+            //System.out.println("Player came from top, current y: " +y);
+            //setPlaying(false);
+            //System.out.println("Game STOP");
         }
     }
-
 
     public boolean inBetween(int a, int b1, int b2){
         if((b1 <= a && a <= b2) || (b2 <= a && a <= b1) ){
@@ -233,28 +244,47 @@ public class Player extends GameObject {
         return false;
     }
 
-    public void playerMovment() {
 
-        //Touch click
-        if (screentoch && touchDelay == 0) {
-            touchDelay = 15;
-            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
-                dy = -15;
-                dx = 10;
+    public void playerJump(){
+        if (screentoch) {
+            if (jumpForce > 1.5) {
+                jumpForce = 1.5;
 
-            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
-                dy = -15;
-                dx = -10;
+            }else{
+                jumpForce = jumpForce + 0.1;
+                System.out.println("jumpforce plus = " + jumpForce);
+
             }
         }
-        //collision();
-        ;
+    }
+
+    public void playerMovment() {
+        //Touch click
+        if (screentochEnd && touchDelay == 0) {
+            System.out.println("Touch click");
+            touchDelay = 15 + (int)(4* (jumpForce));
+            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
+                dy = -15 * jumpForce;
+                dx = 10 * jumpForce;
+                setScreenTouchEnd(false);
+                jumpForce = 0.5;
+
+            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
+                dy = -15 * jumpForce;
+                dx = -10 * jumpForce;
+                setScreenTouchEnd(false);
+                jumpForce = 0.5;
+
+            }
+        }else if (touchDelay != 0){
+            setScreenTouch(false);
+        }
+
         y += dy;
         dy += 1;
         x += dx;
 
         //Gravity
-        //dy = (int) (dya += 0.1);
         dy += 0.1;
 
         //Deceleration in x
