@@ -74,33 +74,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //player.setScreenTouch(false);
+        player.setScreenTouchEnd(false);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //System.out.println("getX = " + event.getX());
-            //System.out.println("getY = " + event.getY());
-            player.screenTouch(true);
+            System.out.println("Aktion Down = true");
+            player.setScreenTouch(true);
+            player.setScreenTouchEnd(false);
             player.setClickY(event.getY());
             player.setClickX(event.getX());
-
             return true;
-
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            player.screenTouch(false);
-            return true;
+            if (player.getScreenTouch() && !player.getScreenTouchEnd()) {
+                System.out.println("Aktion UP = true");
+                player.setScreenTouchEnd(true);
+                player.setScreenTouch(false);
+                return true;
+            }
+
         }
-
         return super.onTouchEvent(event);
-
     }
 
 
     public void update() {
         if (player.getPlaying()) {
             player.update();
-            //collisionPlayerOpponent();
-            //System.out.println("player (x,y) = "+"("+player.x+","+player.y+")");
-            //System.out.println("opponent (x,y) = "+"("+opponent.x+","+opponent.y+")");
-            //System.out.println(player.getRectangle());
         }
     }
     public void movementOpponent(float x, float y,long time){
@@ -111,6 +110,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void draw(Canvas canvas){
+        super.draw(canvas);
         final float scaleFactor = Math.min( getWidth()*2 / (WIDTH*1.f), getHeight()*2 / (HEIGHT*1.f));
         final int savedState = canvas.save();
         canvas.scale(scaleFactor, scaleFactor);
@@ -131,15 +131,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public boolean collision(Player a, Player b) {
         if (Rect.intersects(a.getRectangle(), b.getRectangle())) {
-            //System.out.println(a.getRectangle());
-            //System.out.println(b.getRectangle());
             return true;
         }
         return false;
     }
 
     public void collisionPlayerOpponent(){
-        //System.out.println(collision(opponent,player));
         if(collision(player,opponent)){
             player.dx = 0;
             player.dy = 0;
@@ -177,7 +174,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    public Player getOpponent() {
-        return opponent;
+    public Player getOpponent(boolean isPlayer) {
+        if(isPlayer) {
+            return opponent;
+        }
+        return player;
     }
 }

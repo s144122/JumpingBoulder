@@ -10,12 +10,14 @@ import android.util.DisplayMetrics;
  */
 public class Player extends GameObject {
     private boolean screentoch;
+    private boolean screentochEnd;
     private boolean playing = true;
     private float clickX;
     private float clickY;
     private Animation animation = new Animation();
     private long startTime;
     private int touchDelay;
+    private double jumpForce;
     public int x;
     public int y;
     public int XL;
@@ -23,10 +25,15 @@ public class Player extends GameObject {
     public int YUp;
     public int YDown;
     private GamePanel gamePanel;
+    public boolean isMe;
+    private int lastXL;
+    private int lastXR;
+    private int lastYDown;
+    private int lastYUp;
 
 
     public Player(Bitmap res, int w, int h, int numFrames,boolean Me,GamePanel gamepanel) {
-
+        isMe = Me;
         if(Me) {
             x = 100;
             y = 388;
@@ -38,10 +45,17 @@ public class Player extends GameObject {
         dx = 0;
         height = h;
         width = w;
-        XL = x - width/2;
-        XR = x + width/2;
-        YDown = y - height/2;
-        YUp = y + height/2;
+        XL = getXL(x);
+        XR = getXR(x);
+        YDown = getYDown(y);
+        YUp = getYUp(y);
+
+        jumpForce = 0.5;
+
+        lastXL = XL;
+        lastXR = XR;
+        lastYDown = YDown;
+        lastYUp = YUp;
 
         this.gamePanel = gamepanel;
 
@@ -58,20 +72,47 @@ public class Player extends GameObject {
     }
 
     public void update() {
+        int lastX = x;
+        int lastY = y;
+
+        XL = getXL(x);
+        XR = getXR(x);
+        YDown = getYDown(y);
+        YUp = getYUp(y);
+
         long elapsed = (System.nanoTime() - startTime) / 1000000;
         if (elapsed > 100) {
             startTime = System.nanoTime();
         }
+        playerJump();
         playerMovment();
         if(touchDelay > 0){
             touchDelay--;
         }
 
-        XL = x - width/2-1;
-        XR = x + width/2+1;
-        YDown = y - height/2;
-        YUp = y + height/2;
+        XL = getXL(x);
+        XR = getXR(x);
+        YDown = getYDown(y);
+        YUp = getYUp(y);
+
+        lastXL = getXL(lastX);
+        lastXR = getXR(lastX);
+        lastYDown = getYDown(lastY);
+        lastYUp = getYUp(lastY);
     }
+    private int getXL(int X){
+        return X - width/2;
+    }
+    private int getXR(int X){
+        return X + width/2;
+    }
+    private int getYDown(int Y){
+        return Y + height/2;
+    }
+    private int getYUp(int Y){
+        return Y - height/2;
+    }
+
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(animation.getImage(), x, y, null);
@@ -89,9 +130,16 @@ public class Player extends GameObject {
     public void setClickY(float f) {
         clickY = f;
     }
-    public void screenTouch(boolean b) {
+    public void setScreenTouch(boolean b) {
         screentoch = b;
     }
+    public void setScreenTouchEnd(boolean b) {
+    screentochEnd = b;
+    }
+    public boolean getScreenTouch(){return screentoch;}
+    public boolean getScreenTouchEnd(){return screentochEnd;}
+
+
     public Rect getRectangle(){
         return new Rect(x,y, x+width, y+height);
     }
@@ -101,12 +149,28 @@ public class Player extends GameObject {
     int Width = displaymetrics.widthPixels;
 
     public void collision() {
-
+/*
         System.out.println("playerXL = " + XL);
         System.out.println("playerXR = " + XR);
-        System.out.println("opponentXL = " + gamePanel.getOpponent().XL);
-        System.out.println("opponentXR = " + gamePanel.getOpponent().XR);
-        System.out.println("opponentX = "+ gamePanel.getOpponent().x);
+        System.out.println("player YUp: " + YUp);
+        System.out.println("player YDown: " + YDown);
+
+        System.out.println("player lastXL: " + lastXL);
+        System.out.println("player lastXR: " + lastXR);
+        System.out.println("player lastYUp: " + lastYUp);
+        System.out.println("player lastYDown: " + lastYDown);
+
+
+        System.out.println("opponentXL = " + gamePanel.getOpponent(isMe).XL);
+        System.out.println("opponentXR = " + gamePanel.getOpponent(isMe).XR);
+        System.out.println("opponentYUp = " + gamePanel.getOpponent(isMe).YUp);
+        System.out.println("opponentYDown = " + gamePanel.getOpponent(isMe).YDown);
+
+        System.out.println("opponent lastXL = " + gamePanel.getOpponent(isMe).lastXL);
+        System.out.println("opponent lastXR = " + gamePanel.getOpponent(isMe).lastXR);
+        System.out.println("opponent lastYUp = " + gamePanel.getOpponent(isMe).lastYUp);
+        System.out.println("opponent lastYDown = " + gamePanel.getOpponent(isMe).lastYDown);
+        */
         //Bottom border
         if (y >= 388 && dy>0) {
             y = 388;
@@ -130,62 +194,47 @@ public class Player extends GameObject {
             dx = dx * -0.5;
         }
 
+        int OXR = gamePanel.getOpponent(isMe).XR;
+        int OXL = gamePanel.getOpponent(isMe).XL;
+        int OYDown = gamePanel.getOpponent(isMe).YDown;
+        int OYUp = gamePanel.getOpponent(isMe).YUp;
+        int OLXR = gamePanel.getOpponent(isMe).lastXR;
+        int OLXL = gamePanel.getOpponent(isMe).lastXL;
+        int OLYDown = gamePanel.getOpponent(isMe).lastYDown;
+        int OLYUp = gamePanel.getOpponent(isMe).lastYUp;
+
         //player collision
         //Rigth side of player
-        //System.out.println(inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL));
-        if(inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)&& (inBetween(YDown,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp)) && (inBetween(YUp,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp))){
-            dx = 0;
-            //dy = 0;
+        if(inBetween(XR,OXR,OXL) && !inBetween(lastXR,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
+            //System.out.println("Player right side jumped into opponent, current x:"+ x);
+            x = getXL(gamePanel.getOpponent(isMe).XL)-2;
+            //System.out.println("Player x-speed pre collission: "+dx);
+            dx = dx*(-1);
+            //System.out.println("Player x-speed post collission: "+dx);
+            //System.out.println("Player right side jumped into opponent, current x:"+ x);
         }
         //Left side of player
-        if(inBetween(XL,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL) && (inBetween(YDown,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp)) && (inBetween(YUp,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp)) ){
-            dx = 0;
-            //dy = 0;
+        if(inBetween(XL,OXR,OXL) && !inBetween(lastXL,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
+            //System.out.println("Player left side jumped into opponent, current x:"+ x);
+            x = getXR(gamePanel.getOpponent(isMe).XR)+2;
+            //System.out.println("Player x-speed pre collission: "+dx);
+            dx = dx*(-1);
+            //System.out.println("Player x-speed post collission: "+dx);
+            //System.out.println("Player left side jumped into opponent, current x:"+ x);
         }
 
+        if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
+            y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
+            dy = dy*(0);
 
-
-
-
-        //if(x - width/2 == gamePanel.getOpponent().x + gamePanel.getOpponent().width/2 && y < gamePanel.getOpponent().y + gamePanel.getOpponent().height/2 && y > gamePanel.getOpponent().y - gamePanel.getOpponent().height/2){
-        //    dx = 0;
-            //dy = 0;
-        //}
-        //Top side of player
-        //if(y + height/2 == gamePanel.getOpponent().y - gamePanel.getOpponent().height/2 && x < gamePanel.getOpponent().x + gamePanel.getOpponent().width/2 && x > gamePanel.getOpponent().x - gamePanel.getOpponent().width/2){
-            //dx = 0;
-        //    dy = 0;
-        //}
-        //Bottom side of player
-        //if(inBetween(YDown,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp) && (inBetween(XL,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) && (inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) ){
-        //    dy = 0;
-            //dy = 0;
-        //}
-
-        //if(inBetween(YUp,gamePanel.getOpponent().YDown ,gamePanel.getOpponent().YUp) && (inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) && (inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) ){
-        //    dy = 0;
-        //}
-        //if(inBetween(YDown,gamePanel.getOpponent().YUp ,gamePanel.getOpponent().YDown)  && (inBetween(XL,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) && (inBetween(XR,gamePanel.getOpponent().XR ,gamePanel.getOpponent().XL)) ){
-        //    dy = 0;
-        //}
-
-
-        //System.out.println(gamePanel.getOpponent().x);
-        //System.out.println(x);;
-        //if (y + height/2 >= gamePanel.getOpponent().y + height/2 && x < gamePanel.getOpponent().x - gamePanel.getOpponent().width/2 && x > gamePanel.getOpponent().x + gamePanel.getOpponent().height/2){
-        //    System.out.println("true");
-        //}
-        //System.out.println(y + height/2);
-        //System.out.println(gamePanel.getOpponent().y - height/2);
-        //System.out.println(y);
-        //System.out.println(gamePanel.getOpponent().y);
-        //if(y + height/2 == gamePanel.getOpponent().y - gamePanel.getOpponent().height/2 && (x - width/2 < gamePanel.getOpponent().x + gamePanel.getOpponent().height/2 && x - width/2 > gamePanel.getOpponent().x - gamePanel.getOpponent().height/2)&&
-        //        (x + width/2 > gamePanel.getOpponent().x + gamePanel.getOpponent().height/2 && x + width/2 > gamePanel.getOpponent().x - gamePanel.getOpponent().height/2) ){
-            //dx = 0;
-        //    dy = 0;
-        //}
-
-
+        }
+        if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
+            y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
+            dy = 0;
+            //System.out.println("Player came from top, current y: " +y);
+            //setPlaying(false);
+            //System.out.println("Game STOP");
+        }
     }
 
     public boolean inBetween(int a, int b1, int b2){
@@ -195,28 +244,47 @@ public class Player extends GameObject {
         return false;
     }
 
-    public void playerMovment() {
 
-        //Touch click
-        if (screentoch && touchDelay == 0) {
-            touchDelay = 15;
-            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
-                dy = -15;
-                dx = 10;
+    public void playerJump(){
+        if (screentoch) {
+            if (jumpForce > 1.5) {
+                jumpForce = 1.5;
 
-            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
-                dy = -15;
-                dx = -10;
+            }else{
+                jumpForce = jumpForce + 0.1;
+                System.out.println("jumpforce plus = " + jumpForce);
+
             }
         }
-        collision();
-        ;
+    }
+
+    public void playerMovment() {
+        //Touch click
+        if (screentochEnd && touchDelay == 0) {
+            System.out.println("Touch click");
+            touchDelay = 15 + (int)(4* (jumpForce));
+            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
+                dy = -15 * jumpForce;
+                dx = 10 * jumpForce;
+                setScreenTouchEnd(false);
+                jumpForce = 0.5;
+
+            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
+                dy = -15 * jumpForce;
+                dx = -10 * jumpForce;
+                setScreenTouchEnd(false);
+                jumpForce = 0.5;
+
+            }
+        }else if (touchDelay != 0){
+            setScreenTouch(false);
+        }
+
         y += dy;
         dy += 1;
         x += dx;
 
         //Gravity
-        //dy = (int) (dya += 0.1);
         dy += 0.1;
 
         //Deceleration in x
