@@ -24,9 +24,9 @@ public class UDP{
     private static DatagramSocket socket = null;
 
     public static void setUp() throws IOException {
-        System.out.println("Setting up connection IP: "+serverIP + " port: "+serverPort);
+        System.out.println("UDP - setUp -Setting up connection IP: "+serverIP + " port: "+serverPort);
         ip = InetAddress.getByName(serverIP);
-        System.out.println("InetAddress created: " + ip);
+        System.out.println("UDP - setUp -InetAddress created: " + ip);
         socket = new DatagramSocket(null);
         socket.connect(ip,serverPort);
         System.out.println("UDP - setUp - Socket established to server, getting id...");

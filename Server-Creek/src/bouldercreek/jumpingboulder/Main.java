@@ -15,6 +15,7 @@ public class Main {
     private static int nextClientID = Integer.MIN_VALUE+1;
     private static GameThread newGameRoom = null;
     public static DatagramSocket socket = null;
+    public final static int packetSize = 29;
 
     public static void main(String[] args) {
         final int serverPort = 7865;
@@ -23,7 +24,7 @@ public class Main {
             socket = new DatagramSocket(serverPort);
 
             //buffer to receive incoming data
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[packetSize];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
             while (true) {
                 socket.receive(incoming);
@@ -31,23 +32,20 @@ public class Main {
 
             }
         }catch(IOException e){
-            System.err.println("IOException " + e);
+            System.err.println("Main - main - IOException " + e);
         }
     }
 
     public static GameThread newGame(Client client) {
         if(newGameRoom.equals(null)){
-            final BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
-            newGameRoom = new GameThread(queue, client.getClientId());
+            BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
+            newGameRoom = new GameThread(queue, client);
 
         }
-
-
         return newGameRoom;
     }
 
-
-    public static void nextClientID() {
+    public static int getnextClientID() {
         nextClientID++;
 
         //this is to ensure the server never assigns a client with the default client id
@@ -56,9 +54,6 @@ public class Main {
         }
         //Since it will take over 4 000 000 000 client connections, for the server to loop through,
         // it's not necessary to check if  the clientID is used elsewhere.
-    }
-
-    public static int getnextClientID() {
         return nextClientID;
     }
 }
