@@ -2,6 +2,7 @@ package bouldercreek.jumpingboulder;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.util.Map;
 
 import static bouldercreek.jumpingboulder.Main.clients;
@@ -10,31 +11,32 @@ import static bouldercreek.jumpingboulder.Main.clients;
  * Created by jakob on 17-06-2016.
  */
 public class Reciever extends Thread {
-    DatagramPacket incoming;
+    private byte[] data;
+    private InetAddress address;
+    private int port;
 
-    public Reciever(DatagramPacket incoming){
-        this.incoming = incoming;
-
+    public Reciever(byte[] data, InetAddress address, int port) {
+        this.data = data;
+        this.address = address;
+        this.port = port;
     }
 
     @Override
     public void run(){
-        byte[] data = incoming.getData();
+        System.out.println("Reciever - run - thread started");
         int clientId = ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
         //echo the details of incoming data - client ip : client port - client message
-        System.out.println("Reciever - run - Incomming data from ip: " + incoming.getAddress().getHostAddress()
-                + " : " + incoming.getPort()
+        System.out.println("Reciever - run - Incomming data from ip: " + address
+                + " : " + port
                 + " - " + clientId);
 
         if (clientId == Integer.MIN_VALUE) {
-            Client client = new Client(Main.getnextClientID(), incoming.getAddress(), incoming.getPort());
+            Client client = new Client(Main.getnextClientID(), address, port);
             Main.clients.put(client.getClientId(), client);
-            DatagramPacket outgoing = new DatagramPacket(ByteConversion.convertToByte(Main.getnextClientID()), 1024);
-            try {
-                Main.socket.send(outgoing);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            byte[] id = ByteConversion.convertToByte(client.getClientId());
+            client.sendData(new byte[]{0b00100000, data[0], data[1], data[2], data[3]});
+
 
         } else {
             Client client = (Client) Main.clients.get(clientId);

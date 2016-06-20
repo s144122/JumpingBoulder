@@ -1,8 +1,6 @@
 package bouldercreek.jumpingboulder;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.concurrent.BlockingQueue;
 
@@ -16,6 +14,7 @@ public class Client {
     private byte[] lastRecievedData = new byte[Main.packetSize];
     private int port;
     private InetAddress ip;
+    private int timeSinceLastMove = 0;
 
 
     public Client(int clientId, InetAddress address, int port) {
@@ -38,47 +37,61 @@ public class Client {
 
     private void notInGame(byte[] data){
         switch (data[4] & 0b01111111){
-            case 0b00000001: newQuickGame();
+            case 0b00000001:
+                new readyToPlay();
+                Main.newQuickGame(this);
                 break;
 
         }
-    }
-
-    private void newQuickGame() {
-        game = Main.newGame(this);
-
     }
 
 
     private void inGame(byte[] data) {
-        switch (data[4] & 0b01111111){
-            case 0b00000001: sendIfNewMove(data);
+        switch (data[4] & 0b00111111){
+            case 0b00000001: queue.add(data);
                 break;
             case 0b00000010: gameEnded();
                 break;
-
+            case 0b00000011: readyToPlay.interrupted();
+                break;
         }
 
-
     }
+
+
 
     private void gameEnded() {
         System.out.println("Client - gameEnded - game: " + game + " ended");
         game.interrupt();
     }
 
-    private void sendIfNewMove(byte[] data) {
-        int lastMoveTime = ByteConversion.convertByteToInt(new byte[]{data[13], data[14], data[15], data[16]});
-        int lastMoveTimeFromErlierData = ByteConversion.convertByteToInt(new byte[]{data[13], data[14], data[15], data[16]});
-        if (lastMoveTime != lastMoveTimeFromErlierData){
-            queue.add(data);
+    public void setQueue(BlockingQueue<byte[]> queue) {
+        this.queue = queue;
+    }
+
+    public class readyToPlay extends Thread{
+        //This Thread removes waiting client, if the client stops sending a ready signal
+
+        @Override
+        public void run() {
+            super.run();
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    Main.waitingClient = null;
+                    break;
+                } catch (InterruptedException e) {
+                    if (!game.equals(null)){
+                        break;
+                    }
+                }
+            }
         }
     }
 
-    public void sendDate(byte[] data) {
-        DatagramPacket outgoing = new DatagramPacket(data, Main.packetSize, ip, port);
+    public void sendData(byte[] data) {
         try {
-            Main.socket.send(outgoing);
+            Main.sendData(data, ip, port);
         } catch (IOException e) {
             System.out.println("Client - sendData - Client: " + this + " could not send data through socket: "+ Main.socket);
             e.printStackTrace();

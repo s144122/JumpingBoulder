@@ -13,12 +13,12 @@ public class Main {
 
     public static Map clients = new HashMap<Integer,Client>();
     private static int nextClientID = Integer.MIN_VALUE+1;
-    private static GameThread newGameRoom = null;
+    public static Client waitingClient = null;
     public static DatagramSocket socket = null;
     public final static int packetSize = 29;
 
     public static void main(String[] args) {
-        final int serverPort = 7865;
+        final int serverPort = 7888;
         try {
             //Creating a server socket, parameter is local port number
             socket = new DatagramSocket(serverPort);
@@ -26,23 +26,33 @@ public class Main {
             //buffer to receive incoming data
             byte[] buffer = new byte[packetSize];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
+            System.out.println("Main - main - server is ready");
             while (true) {
                 socket.receive(incoming);
-                new Reciever(incoming).start();
-
+                System.out.println("Main - main - recieved packet");
+                Thread reciever = new Reciever(incoming.getData(), incoming.getAddress(), incoming.getPort());
+                reciever.start();
             }
         }catch(IOException e){
             System.err.println("Main - main - IOException " + e);
         }
     }
 
-    public static GameThread newGame(Client client) {
-        if(newGameRoom.equals(null)){
+    public static void newQuickGame(Client client) {
+        if(waitingClient.equals(null)){
+            waitingClient = client;
+        }else{
             BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
-            newGameRoom = new GameThread(queue, client);
+            GameThread game = new GameThread(queue,waitingClient,client);
+            waitingClient.game = game;
+            client.game = game;
+            game.start();
+            waitingClient.setQueue(queue);
+            client.setQueue(queue);
+            waitingClient = null;
 
         }
-        return newGameRoom;
+
     }
 
     public static int getnextClientID() {
@@ -55,5 +65,22 @@ public class Main {
         //Since it will take over 4 000 000 000 client connections, for the server to loop through,
         // it's not necessary to check if  the clientID is used elsewhere.
         return nextClientID;
+    }
+
+    public static void sendData(byte[] data, String address, int port) throws IOException {
+        InetAddress ip = InetAddress.getByName(address);
+        sendData(data,ip,port);
+    }
+
+
+    public static void sendData(byte[] data, InetAddress ip, int port) throws IOException {
+        byte[] packedData = new byte[packetSize];
+        for(int i=0; i<data.length; i++){
+            packedData[i] = data[i];
+        }
+        DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, port);
+        socket.send(sendPacket);
+        System.out.println("Main - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
+
     }
 }
