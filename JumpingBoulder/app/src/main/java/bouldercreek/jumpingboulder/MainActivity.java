@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
                 Intent startGame = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(startGame);
             }
@@ -44,31 +45,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             //System.out.println("Async Task for network created");
-            for(int i=0; i<5; i++) {
-                try {
-                    UDP.setUp();
-                    return "Connection successful";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    publishProgress("Connecting..." + i);
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
+            try {
+                UDP.setUp();
+                return "Connection successful";
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
             return "Could not connect to server";
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-
-            TextView text = (TextView) findViewById(R.id.ServerConnectionText);
-            text.setText(values[0]);
-
         }
 
         @Override

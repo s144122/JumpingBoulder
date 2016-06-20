@@ -1,5 +1,7 @@
 package bouldercreek.jumpingboulder;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 
 import java.io.BufferedReader;
@@ -17,9 +19,9 @@ import java.net.UnknownHostException;
  */
 public class UDP{
     final static String serverIP = "10.16.169.37";
-    final static int serverPort = 7865;
+    final static int serverPort = 7888;
     public static int serverId = Integer.MIN_VALUE;
-
+    public static final int packetSize = 29;
     private static InetAddress ip = null;
     private static DatagramSocket socket = null;
 
@@ -30,32 +32,38 @@ public class UDP{
         socket = new DatagramSocket(null);
         socket.connect(ip,serverPort);
         System.out.println("UDP - setUp - Socket established to server, getting id...");
-        sendData(new byte[]{0,0,0,0});
+        sendData(ByteConversion.convertToByte(Integer.MIN_VALUE));
         byte[] data = receiveData();
-        serverId = ByteConversion.convertByteToInt(new byte[]{data[0],data[1],data[2],data[3]});
-        System.out.println("UDP - setUp - New server id is:" + serverId);
+        if(data[0] == 0b00100000) {
+            serverId = ByteConversion.convertByteToInt(new byte[]{data[1], data[2], data[3], data[4]});
+            System.out.println("UDP - setUp - New server id is:" + serverId);
+        }else{
+            throw new IOException("UDP - setUp - Got wrong cmd data from server, expected 32 but got: " + data[0]);
+        }
 
     }
 
+    public static void startQuickGame(){
+        byte[] data = 
+    }
 
 
     private static byte[] receiveData() throws IOException {
-        byte[] data = new byte[128];
+        byte[] data = new byte[packetSize];
         DatagramPacket recivePacket = new DatagramPacket(data, data.length);
+        System.out.println("UDP - recieveData - ready to recieve data");
         socket.receive(recivePacket);
         return recivePacket.getData();
     }
 
 
     private static void sendData(byte[] data) throws IOException {
-        byte[] packedData = new byte[128];
+        byte[] packedData = new byte[packetSize];
         for(int i=0; i<data.length; i++){
             packedData[i] = data[i];
         }
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, serverPort);
         socket.send(sendPacket);
-
+        System.out.println("UDP - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
     }
-
-
 }
