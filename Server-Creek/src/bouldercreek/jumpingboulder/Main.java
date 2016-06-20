@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Main {
 
     public static Map clients = new HashMap<Integer,Client>();
-    private static int nextClientID = Integer.MIN_VALUE+1;
+    private static int nextClientID = Integer.MIN_VALUE;
     public static Client waitingClient = null;
     public static DatagramSocket socket = null;
     public final static int packetSize = 29;
@@ -80,7 +80,10 @@ public class Main {
         }
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, port);
         socket.send(sendPacket);
-        System.out.println("Main - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
+        System.out.println("Main - sendData - data send to: "+ sendPacket.getAddress()
+                +" : "+ sendPacket.getPort()
+                + " - " + ByteConversion.printBytes(data)
+                + " to clientId:" + ByteConversion.convertByteToInt(new byte[]{data[1], data[2], data[3], data[4]}) );
 
     }
 }

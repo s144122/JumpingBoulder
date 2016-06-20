@@ -35,7 +35,7 @@ public class Reciever extends Thread {
             Main.clients.put(client.getClientId(), client);
 
             byte[] id = ByteConversion.convertToByte(client.getClientId());
-            client.sendData(new byte[]{0b00100000, data[0], data[1], data[2], data[3]});
+            client.sendData(new byte[]{0b00100000, id[0], id[1], id[2], id[3]});
 
 
         } else {
