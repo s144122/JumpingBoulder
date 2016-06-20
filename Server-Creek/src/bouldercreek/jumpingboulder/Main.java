@@ -15,7 +15,7 @@ public class Main {
     private static int nextClientID = Integer.MIN_VALUE;
     public static Client waitingClient = null;
     public static DatagramSocket socket = null;
-    public final static int packetSize = 29;
+    public final static int packetSize = 32;
 
     public static void main(String[] args) {
         final int serverPort = 7888;
@@ -29,7 +29,7 @@ public class Main {
             System.out.println("Main - main - server is ready");
             while (true) {
                 socket.receive(incoming);
-                System.out.println("Main - main - recieved packet");
+                //System.out.println("Main - main - recieved packet");
                 Thread reciever = new Reciever(incoming.getData(), incoming.getAddress(), incoming.getPort());
                 reciever.start();
             }
@@ -39,7 +39,7 @@ public class Main {
     }
 
     public static void newQuickGame(Client client) {
-        if(waitingClient.equals(null)){
+        if(waitingClient == null){
             waitingClient = client;
         }else{
             BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();

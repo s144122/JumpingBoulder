@@ -73,4 +73,21 @@ public class ByteConversion {
         return byteString;
     }
 
+    public static byte[] combine(byte[]... b){
+        int bytelength = 0;
+        for (int i=0; i<b.length; i++){
+            bytelength += b[i].length;
+        }
+        byte[] output = new byte[bytelength];
+
+        int index = 0;
+        for(int i=0; i<b.length; i++){
+            for (int j=0; j<b[i].length; j++){
+                output[index] = b[i][j];
+                index++;
+            }
+        }
+        return output;
+    }
+
 }

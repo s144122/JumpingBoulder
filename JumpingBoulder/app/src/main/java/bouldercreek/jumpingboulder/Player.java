@@ -1,18 +1,17 @@
 package bouldercreek.jumpingboulder;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 
 /**
  * Created by Kristian on 07-06-2016.
  */
 public class Player extends GameObject {
-    private boolean screentoch;
-    private boolean screentochEnd;
+    private boolean screentouch;
+    private boolean screentouchEnd;
     private boolean playing = true;
     private float clickX;
     private float clickY;
@@ -35,6 +34,13 @@ public class Player extends GameObject {
     private Winscreen winscreen;
     public static Canvas canvas;
     public boolean screen;
+
+    //Variables used for sending data to server
+    public boolean isWaiting = true;
+    private boolean lastMoveDirection;
+    private double lastMoveForce;
+    private int lastMoveTime;
+
 
 
 
@@ -75,6 +81,8 @@ public class Player extends GameObject {
         animation.setFrames(image);
         animation.setDelay();
         startTime = System.nanoTime();
+
+
     }
 
     //Updates in every game loop.
@@ -87,10 +95,13 @@ public class Player extends GameObject {
         YDown = getYDown(y);
         YUp = getYUp(y);
 
+        //KRISTIAN###############################################################################
+        //BLIVER DETTE BRUGT?####################################################################
         long elapsed = (System.nanoTime() - startTime) / 1000000;
         if (elapsed > 100) {
             startTime = System.nanoTime();
         }
+        //#######################################################################################
         playerJump();
         playerMovment();
         if(touchDelay > 0){
@@ -106,6 +117,13 @@ public class Player extends GameObject {
         lastXR = getXR(lastX);
         lastYDown = getYDown(lastY);
         lastYUp = getYUp(lastY);
+
+        if (isWaiting){
+            UDP.readyToPlay();
+        }else {
+            UDP.sendMove(lastMoveDirection, lastMoveForce, lastMoveTime, x, y, gamePanel.getGameTime());
+        }
+
     }
     private int getXL(int X){
         return X - width/2;
@@ -138,13 +156,13 @@ public class Player extends GameObject {
         clickY = f;
     }
     public void setScreenTouch(boolean b) {
-        screentoch = b;
+        screentouch = b;
     }
     public void setScreenTouchEnd(boolean b) {
-    screentochEnd = b;
+    screentouchEnd = b;
     }
-    public boolean getScreenTouch(){return screentoch;}
-    public boolean getScreenTouchEnd(){return screentochEnd;}
+    public boolean getScreenTouch(){return screentouch;}
+    public boolean getScreenTouchEnd(){return screentouchEnd;}
 
 
     public Rect getRectangle(){
@@ -227,7 +245,7 @@ public class Player extends GameObject {
 
     //Set the speed of the player jump
     public void playerJump(){
-        if (screentoch) {
+        if (screentouch) {
             if (jumpForce > 1.5) {
                 jumpForce = 1.5;
 
@@ -240,7 +258,7 @@ public class Player extends GameObject {
 
     public void playerMovment() {
         //Touch click
-        if (screentochEnd && touchDelay == 0) {
+        if (screentouchEnd && touchDelay == 0) {
             //System.out.println("Touch click");
             touchDelay = 15 + (int)(4* (jumpForce));
             if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
@@ -276,6 +294,7 @@ public class Player extends GameObject {
 
         }
         collision();
+
 
     }
 }

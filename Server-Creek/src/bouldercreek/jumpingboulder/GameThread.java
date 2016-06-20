@@ -18,7 +18,10 @@ public class GameThread extends Thread {
     }
 
     public void run(){
-        byte[] cmdData = {0b01010000};
+        System.out.println("GameThread - run - New game has started between: "
+                + client1.getClientId()
+                + " and " + client2.getClientId());
+        byte[] cmdData = {0b01000000};
         byte[] player1DataX = ByteConversion.convertToByte(100);
         byte[] player1DataY = ByteConversion.convertToByte(388);
 
@@ -26,12 +29,8 @@ public class GameThread extends Thread {
         byte[] player2DataY = ByteConversion.convertToByte(388);
 
         for (byte i=3 ; i>=0; i--){
-            client1.sendData(new byte[]{(byte) (cmdData[0]+i),
-                    player1DataX[0], player1DataX[1], player1DataX[2], player1DataX[3],
-                    player1DataY[0], player1DataY[1], player1DataY[2], player1DataY[3]});
-            client2.sendData(new byte[]{(byte) (cmdData[0]+i),
-                    player2DataX[0], player2DataX[1], player2DataX[2], player2DataX[3],
-                    player2DataY[0], player2DataY[1], player2DataY[2], player2DataY[3]});
+            client1.sendData(ByteConversion.combine(cmdData,player1DataX,player1DataY,player2DataX,player2DataY));
+            client2.sendData(ByteConversion.combine(cmdData,player2DataX,player2DataY,player1DataX,player1DataY));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -55,10 +54,14 @@ public class GameThread extends Thread {
                     data = data2;
                 }
                 data[0] = 0b01100000;
+
+                //This loop removes the clientID from the data
                 for (int i=1; i<data.length-3; i++){
                     data[i] = data[i+3];
                     data[i+3] = 0;
                 }
+
+                //This sends the data to the client who did not send it
                 if( id == client1.getClientId()){
                     client2.sendData(data);
                 }else if(id == client2.getClientId()){
@@ -66,22 +69,20 @@ public class GameThread extends Thread {
                 }
             } catch (InterruptedException e) {
                 System.out.println("GameThread - run - Game: " + this + " stopped");
+                return;
             }
         }
 
     }
 
-    public void add(Client client) {
-        client2 = client;
-    }
 
     private class threadKiller extends Thread{
-        //This thread will interupt the game thread, if no data is sent to the queue in 10 minutes
+        //This thread will interupt the game thread, if no data is sent to the queue in 1 minute
 
         public threadKiller(GameThread game){
             try {
-                Thread.sleep(600000);
-                System.out.println("GameThread - threadKiller - No game move happened in 10 minutes, game stopped: " + game);
+                Thread.sleep(60000);
+                System.out.println("GameThread - threadKiller - No game move happened in 1 minute, game stopped: " + game);
                 game.interrupt();
             } catch (InterruptedException e) {
 

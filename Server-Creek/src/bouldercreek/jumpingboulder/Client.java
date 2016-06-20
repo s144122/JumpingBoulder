@@ -25,10 +25,10 @@ public class Client {
 
     public void act(byte[] data){
         //Checker om den længst til venstre bit er 1 eller 0, i d. 5. byte i arrayet
-        switch (data[4] & 0b10000000) {
+        switch (data[4] & 0b01000000) {
             case 0b00000000: notInGame(data);
                 break;
-            case 0b10000000: inGame(data);
+            case 0b01000000: inGame(data);
                 break;
         }
         lastRecievedData = data;
@@ -36,8 +36,8 @@ public class Client {
 
 
     private void notInGame(byte[] data){
-        switch (data[4] & 0b01111111){
-            case 0b00000001:
+        switch (data[4] & 0b00100000){
+            case 0b00100000:
                 new readyToPlay();
                 Main.newQuickGame(this);
                 break;
@@ -47,12 +47,12 @@ public class Client {
 
 
     private void inGame(byte[] data) {
-        switch (data[4] & 0b00111111){
-            case 0b00000001: queue.add(data);
+        switch (data[4] & 0b00110000){
+            case 0b00010000: queue.add(data);
                 break;
-            case 0b00000010: gameEnded();
+            case 0b00100000: gameEnded();
                 break;
-            case 0b00000011: readyToPlay.interrupted();
+            case 0b00110000: readyToPlay.interrupted();
                 break;
         }
 

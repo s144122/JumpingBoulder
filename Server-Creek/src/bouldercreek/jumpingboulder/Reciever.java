@@ -23,13 +23,13 @@ public class Reciever extends Thread {
 
     @Override
     public void run(){
-        System.out.println("Reciever - run - thread started");
+        //System.out.println("Reciever - run - thread started");
         int clientId = ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
         //echo the details of incoming data - client ip : client port - client message
-        System.out.println("Reciever - run - Incomming data from ip: " + address
+        /*System.out.println("Reciever - run - Incomming data from ip: " + address
                 + " : " + port
                 + " - " + clientId);
-
+        */
         if (clientId == Integer.MIN_VALUE) {
             Client client = new Client(Main.getnextClientID(), address, port);
             Main.clients.put(client.getClientId(), client);

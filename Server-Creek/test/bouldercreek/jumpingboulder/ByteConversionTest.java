@@ -89,4 +89,18 @@ public class ByteConversionTest {
     }
 
 
+    @Test
+    public void combineTest() throws Exception{
+        byte[] b1 = new byte[]{1,2,3,4};
+        byte[] b2 = new byte[]{5,6,7,8};
+        byte[] b3 = new byte[]{1,2,3,4,5,6,7,8};
+
+        byte[] b4 = ByteConversion.combine(b1,b2);
+
+        for (int i=0; i<b3.length; i++) {
+            assertEquals(b3[i],b4[i]);
+        }
+    }
+
+
 }

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                UDP.startQuickGame();
                 Intent startGame = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(startGame);
             }

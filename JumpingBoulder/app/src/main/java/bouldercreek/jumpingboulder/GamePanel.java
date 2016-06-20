@@ -3,11 +3,12 @@ package bouldercreek.jumpingboulder;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -21,6 +22,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Winscreen winscreen;
     private ArrayList<TopBorder> topborder;
     private ArrayList<BotBorder> botborder;
+
+    //Connection variables
+    private int gameTime = 0;
+    private int timeTillStart = Integer.MAX_VALUE;
+    private int opponentLastMoveTime;
+
 
     public GamePanel(Context context) {
         super(context);
@@ -103,14 +110,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public void update() {
+        if (timeTillStart == 0){
+            gameTime++;
+            opponent.update();
+            player.update();
+
+            this.updateWinScreen();
+
+
+        } else {
+            timeTillStart--;
+        }
         if (player.getPlaying()) {
             player.update();
-            this.updateWinScreen();
-            //System.out.println("GamePanel - update " + "Dette er en test ");
 
         }
+
     }
-    public void movementOpponent(float x, float y,long time){
+    public void movementOpponent(float x, float y,int time){
         opponent.setClickX(x);
         opponent.setClickY(y);
     }
@@ -169,6 +186,70 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             return opponent;
         }
         return player;
+    }
+
+    public int getGameTime() {
+        return gameTime;
+    }
+
+
+    private class Listener extends AsyncTask<Void, Move, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                byte[] data = UDP.receiveData();
+                switch (data[0] & 0b01000000){
+                    case 0b00000000:
+                        System.out.println("GamePanel - Listener - Server says we are not in game");
+                        return null;
+                    case 0b01000000 :inGame(data);
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+
+            return null;
+        }
+
+        private void inGame(byte[] data) {
+            switch (data[0] & 0b00100000){
+                case 0b00000000: gameCountingDown(data);
+                    break;
+                case 0b00100000: gameRunning(data);
+                    break;
+            }
+        }
+
+        private void gameCountingDown(byte[] data) {
+            int time = data[0] & 0b00000011;
+            if(timeTillStart >0) {
+                player.setPlaying(false);
+                //Updates timeTillStart if it's ahead of current timeTillStart
+                //since it can never get in front of server, but might recieve a packet way later,
+                //it always chooses smalles number
+                if(timeTillStart > time*30) {
+                    timeTillStart = time * 30;
+                }
+                player.x = ByteConversion.convertByteToInt(new byte[]{data[1],data[2],data[3],data[4]});
+                player.y = ByteConversion.convertByteToInt(new byte[]{data[5],data[6],data[7],data[8]});
+
+
+                opponent.x = ByteConversion.convertByteToInt(new byte[]{data[9],data[10],data[11],data[12]});
+                opponent.y = ByteConversion.convertByteToInt(new byte[]{data[13],data[14],data[15],data[16]});
+            }
+
+        }
+
+
+        private void gameRunning(byte[] data) {
+
+
+        }
     }
 
 }
