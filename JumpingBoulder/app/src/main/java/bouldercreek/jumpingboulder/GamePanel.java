@@ -18,13 +18,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Bagground bg;
     private Player player;
     private Player opponent;
+    private Winscreen winscreen;
     private ArrayList<TopBorder> topborder;
     private ArrayList<BotBorder> botborder;
 
     public GamePanel(Context context) {
         super(context);
-
-
         //add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
 
@@ -72,12 +71,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    public void winScreen(Canvas canvas){
+        super.draw(canvas);
+        winscreen = new Winscreen(BitmapFactory.decodeResource(getResources(), R.drawable.winscreen),593,150);
+        winscreen.draw(canvas);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //player.setScreenTouch(false);
         player.setScreenTouchEnd(false);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            System.out.println("Aktion Down = true");
+            //System.out.println("Aktion Down = true");
             player.setScreenTouch(true);
             player.setScreenTouchEnd(false);
             player.setClickY(event.getY());
@@ -86,7 +91,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (player.getScreenTouch() && !player.getScreenTouchEnd()) {
-                System.out.println("Aktion UP = true");
+                //System.out.println("Aktion UP = true");
                 player.setScreenTouchEnd(true);
                 player.setScreenTouch(false);
                 return true;
@@ -100,6 +105,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         if (player.getPlaying()) {
             player.update();
+            this.updateWinScreen();
+            //System.out.println("GamePanel - update " + "Dette er en test ");
+
         }
     }
     public void movementOpponent(float x, float y,long time){
@@ -129,27 +137,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    public boolean collision(Player a, Player b) {
-        if (Rect.intersects(a.getRectangle(), b.getRectangle())) {
-            return true;
-        }
-        return false;
-    }
-
-    public void collisionPlayerOpponent(){
-        if(collision(player,opponent)){
-            player.dx = 0;
-            player.dy = 0;
-            opponent.dx = 0;
-            opponent.dy = 0;
-            if(opponent.getRectangle() == player.getRectangle()){
-                opponent.x = player.x + opponent.width;
-                opponent.y = player.y + opponent.height;
-            }
-
-        }
-
-    }
 
     public void updateBottomBorder(){
         //Create bottom border
@@ -173,6 +160,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
     }
+    public void updateWinScreen(){
+        new Winscreen(BitmapFactory.decodeResource(getResources(),R.drawable.winscreen),593,150);
+    }
 
     public Player getOpponent(boolean isPlayer) {
         if(isPlayer) {
@@ -180,4 +170,5 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         return player;
     }
+
 }

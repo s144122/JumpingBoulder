@@ -1,6 +1,8 @@
 package bouldercreek.jumpingboulder;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
@@ -30,6 +32,10 @@ public class Player extends GameObject {
     private int lastXR;
     private int lastYDown;
     private int lastYUp;
+    private Winscreen winscreen;
+    public static Canvas canvas;
+    public boolean screen;
+
 
 
     public Player(Bitmap res, int w, int h, int numFrames,boolean Me,GamePanel gamepanel) {
@@ -38,7 +44,7 @@ public class Player extends GameObject {
             x = 100;
             y = 388;
         }else {
-            x = 400;
+            x = 700;
             y = 388;
         }
         dy = 0;
@@ -71,6 +77,7 @@ public class Player extends GameObject {
         startTime = System.nanoTime();
     }
 
+    //Updates in every game loop.
     public void update() {
         int lastX = x;
         int lastY = y;
@@ -149,28 +156,6 @@ public class Player extends GameObject {
     int Width = displaymetrics.widthPixels;
 
     public void collision() {
-/*
-        System.out.println("playerXL = " + XL);
-        System.out.println("playerXR = " + XR);
-        System.out.println("player YUp: " + YUp);
-        System.out.println("player YDown: " + YDown);
-
-        System.out.println("player lastXL: " + lastXL);
-        System.out.println("player lastXR: " + lastXR);
-        System.out.println("player lastYUp: " + lastYUp);
-        System.out.println("player lastYDown: " + lastYDown);
-
-
-        System.out.println("opponentXL = " + gamePanel.getOpponent(isMe).XL);
-        System.out.println("opponentXR = " + gamePanel.getOpponent(isMe).XR);
-        System.out.println("opponentYUp = " + gamePanel.getOpponent(isMe).YUp);
-        System.out.println("opponentYDown = " + gamePanel.getOpponent(isMe).YDown);
-
-        System.out.println("opponent lastXL = " + gamePanel.getOpponent(isMe).lastXL);
-        System.out.println("opponent lastXR = " + gamePanel.getOpponent(isMe).lastXR);
-        System.out.println("opponent lastYUp = " + gamePanel.getOpponent(isMe).lastYUp);
-        System.out.println("opponent lastYDown = " + gamePanel.getOpponent(isMe).lastYDown);
-        */
         //Bottom border
         if (y >= 388 && dy>0) {
             y = 388;
@@ -206,34 +191,30 @@ public class Player extends GameObject {
         //player collision
         //Rigth side of player
         if(inBetween(XR,OXR,OXL) && !inBetween(lastXR,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
-            //System.out.println("Player right side jumped into opponent, current x:"+ x);
             x = getXL(gamePanel.getOpponent(isMe).XL)-2;
-            //System.out.println("Player x-speed pre collission: "+dx);
             dx = dx*(-1);
-            //System.out.println("Player x-speed post collission: "+dx);
-            //System.out.println("Player right side jumped into opponent, current x:"+ x);
         }
         //Left side of player
         if(inBetween(XL,OXR,OXL) && !inBetween(lastXL,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
-            //System.out.println("Player left side jumped into opponent, current x:"+ x);
             x = getXR(gamePanel.getOpponent(isMe).XR)+2;
-            //System.out.println("Player x-speed pre collission: "+dx);
             dx = dx*(-1);
-            //System.out.println("Player x-speed post collission: "+dx);
-            //System.out.println("Player left side jumped into opponent, current x:"+ x);
         }
 
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
             y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
             dy = dy*(0);
+            System.out.println("Loser");
+            setPlaying(false);
 
         }
         if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
             dy = 0;
-            //System.out.println("Player came from top, current y: " +y);
-            //setPlaying(false);
-            //System.out.println("Game STOP");
+            System.out.println("Winner");
+            setPlaying(false);
+            screen = true;
+            winscreen.update();
+
         }
     }
 
@@ -244,7 +225,7 @@ public class Player extends GameObject {
         return false;
     }
 
-
+    //Set the speed of the player jump
     public void playerJump(){
         if (screentoch) {
             if (jumpForce > 1.5) {
@@ -252,7 +233,6 @@ public class Player extends GameObject {
 
             }else{
                 jumpForce = jumpForce + 0.1;
-                System.out.println("jumpforce plus = " + jumpForce);
 
             }
         }
@@ -261,7 +241,7 @@ public class Player extends GameObject {
     public void playerMovment() {
         //Touch click
         if (screentochEnd && touchDelay == 0) {
-            System.out.println("Touch click");
+            //System.out.println("Touch click");
             touchDelay = 15 + (int)(4* (jumpForce));
             if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
                 dy = -15 * jumpForce;
@@ -298,5 +278,4 @@ public class Player extends GameObject {
         collision();
 
     }
-
 }
