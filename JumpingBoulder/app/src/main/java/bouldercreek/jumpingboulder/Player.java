@@ -107,6 +107,14 @@ public class Player extends GameObject {
             }
         }
 
+        if(isMe) {
+            if (isWaiting) {
+                UDP.readyToPlay();
+            } else {
+                UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
+            }
+        }
+
         XL = getXL(x);
         XR = getXR(x);
         YDown = getYDown(y);
@@ -117,13 +125,6 @@ public class Player extends GameObject {
         lastYDown = getYDown(lastY);
         lastYUp = getYUp(lastY);
 
-        if(isMe) {
-            if (isWaiting) {
-                UDP.readyToPlay();
-            } else {
-                UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
-            }
-        }
 
     }
     private int getXL(int X){

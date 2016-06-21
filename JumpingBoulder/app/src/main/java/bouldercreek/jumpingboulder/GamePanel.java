@@ -288,10 +288,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
             if(gameTime > opponentLastGameTime) {
                 opponent.x = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 1, 4));
-                System.out.println("GamePanel - Listener - gameRunning - opponent x: "+opponent.x);
+                System.out.println("GamePanel - Listener - gameRunning - recieved x: "
+                        + ByteConversion.convertByteToInt(ByteConversion.subByte(data, 1, 4)));
+                System.out.println("GamePanel - Listener - gameRunning - opponent x: "+ opponent.x);
+
                 opponent.y = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 5, 4));
+                System.out.println("GamePanel - Listener - gameRunning - recieved y: "
+                        + ByteConversion.convertByteToInt(ByteConversion.subByte(data, 5, 4)));
+                System.out.println("GamePanel - Listener - gameRunning - opponent y: "+ opponent.y);
+
                 opponent.dx = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 9, 8));
+                System.out.println("GamePanel - Listener - gameRunning - opponent dx: "+ opponent.dx);
+
                 opponent.dy = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 17, 8));
+                System.out.println("GamePanel - Listener - gameRunning - opponent dy: "+ opponent.dy);
+
                 opponentLastGameTime = gameTime;
             }
 

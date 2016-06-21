@@ -37,6 +37,12 @@ public class ByteConversionTest {
         assertEquals(x, ByteConversion.convertByteToInt(ByteConversion.convertToByte(x)));
     }
 
+    @Test
+    public void convertBackAndForthIntTest2() throws Exception{
+        int x = 388;
+        assertEquals(x, ByteConversion.convertByteToInt(ByteConversion.convertToByte(x)));
+    }
+
 
     // LONG VALUE TESTING #####################################################################
     @Test

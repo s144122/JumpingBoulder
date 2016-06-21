@@ -38,6 +38,8 @@ public class GameThread extends Thread {
                 e.printStackTrace();
             }
         }
+        int sendInfoTime = 100;
+        int sendInfoTime2 = 100;
 
         while (true) {
             Thread killer = new threadKiller(this);
@@ -55,7 +57,6 @@ public class GameThread extends Thread {
                 }
                 //This sends the data to the client who did not send it
                 if( id == client1.getClientId()){
-                    int sendInfoTime = 100;
                     if (sendInfoTime == 0){
                         System.out.println("GameThread - run - sending move to client2 : " + ByteConversion.printBytes(data));
                         sendInfoTime = 100;
@@ -64,7 +65,6 @@ public class GameThread extends Thread {
                     }
                     client2.sendData(data);
                 }else if(id == client2.getClientId()){
-                    int sendInfoTime2 = 100;
                     if (sendInfoTime2 == 0){
                         System.out.println("GameThread - run - sending move to client1 : " + ByteConversion.printBytes(data));
                         sendInfoTime2 = 100;

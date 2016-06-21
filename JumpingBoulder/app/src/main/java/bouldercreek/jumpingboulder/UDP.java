@@ -87,6 +87,9 @@ public class UDP{
         byte[] cmd = new byte[]{0b01100000};
         byte[] xb = ByteConversion.convertToByte(x);
         byte[] yb = ByteConversion.convertToByte(y);
+        System.out.println("UDP - sendMove - y: "+y
+                + "   yb: "+ByteConversion.printBytes(yb)
+                + "   yb as convert: "+ByteConversion.convertByteToInt(yb));
         byte[] dxb = ByteConversion.convertToByte(dx);
         byte[] dyb = ByteConversion.convertToByte(dy);
         byte[] gameTimeb = ByteConversion.convertToByte(gameTime);
