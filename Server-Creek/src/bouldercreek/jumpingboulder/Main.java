@@ -15,7 +15,7 @@ public class Main {
     private static int nextClientID = Integer.MIN_VALUE;
     public static Client waitingClient = null;
     public static DatagramSocket socket = null;
-    public final static int packetSize = 40;
+    public final static int packetSize = 64;
 
     public static void main(String[] args) {
         final int serverPort = 7888;

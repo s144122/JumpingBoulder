@@ -21,7 +21,7 @@ public class UDP{
     final static String serverIP = "10.16.169.37";
     final static int serverPort = 7888;
     public static byte[] serverId = ByteConversion.convertToByte(Integer.MIN_VALUE);
-    public static final int packetSize = 40;
+    public static final int packetSize = 64;
     private static InetAddress ip = null;
     private static DatagramSocket socket = null;
 

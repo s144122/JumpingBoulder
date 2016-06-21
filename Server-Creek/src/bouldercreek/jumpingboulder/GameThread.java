@@ -47,9 +47,11 @@ public class GameThread extends Thread {
             try {
                 //System.out.println("GameThread - run - thread ready to recieve moves");
                 byte[] data = queue.take();
+                System.out.println("GameThread - run - recieved data with: "+data.length+" length");
                 //System.out.println("GameThread - run - took data from queue");
                 killer.interrupt();
                 int id = ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
+                System.out.println("GameThread - run - " + id);
                 if (data.length<8){
                     byte[] data2 = new byte[8];
                     for (int i=0 ; i<data.length; i++){
@@ -63,7 +65,7 @@ public class GameThread extends Thread {
                     data[i] = data[i+3];
                     data[i+3] = 0;
                 }
-                System.out.println("GameThread - run - sending move to client("+id+") : " + ByteConversion.printBytes(data));
+                //System.out.println("GameThread - run - sending move to client("+id+") : " + ByteConversion.printBytes(data));
                 //This sends the data to the client who did not send it
                 if( id == client1.getClientId()){
                     client2.sendData(data);
