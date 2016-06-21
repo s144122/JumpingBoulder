@@ -226,6 +226,7 @@ public class Player extends GameObject {
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
             dy = 0;
             System.out.println("Winner");
+            gamePanel.endGame();
             setPlaying(false);
             screen = true;
             winscreen.update();
