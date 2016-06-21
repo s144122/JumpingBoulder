@@ -131,10 +131,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             timeTillStart--;
         }
-        if (player.getPlaying()) {
-            player.update();
-
-        }
 
     }
     public void movementOpponent(float x, float y,int time){
@@ -200,6 +196,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public long getGameTime() {
         return gameTime;
+    }
+
+    public void endGame(){
+        timeTillStart = -1;
     }
 
 
