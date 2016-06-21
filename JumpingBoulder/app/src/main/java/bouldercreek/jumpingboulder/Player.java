@@ -115,10 +115,14 @@ public class Player extends GameObject {
         lastYDown = getYDown(lastY);
         lastYUp = getYUp(lastY);
 
-        if (isWaiting){
-            UDP.readyToPlay();
-        }else {
-            UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
+        if(isMe) {
+            if (isWaiting) {
+                System.out.println("Player - update - player should send ready to play/waiting for opponent " + this);
+                UDP.readyToPlay();
+            } else {
+                System.out.println("Player - update - player should send move " + this);
+                UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
+            }
         }
 
     }
@@ -218,14 +222,14 @@ public class Player extends GameObject {
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
             y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
             dy = dy*(0);
-            System.out.println("Loser");
+            //System.out.println("Loser");
             setPlaying(false);
 
         }
         if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
             dy = 0;
-            System.out.println("Winner");
+            //System.out.println("Winner");
             gamePanel.endGame();
             setPlaying(false);
             screen = true;

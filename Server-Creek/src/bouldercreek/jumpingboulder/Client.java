@@ -90,6 +90,7 @@ public class Client {
     }
 
     public void sendData(byte[] data) {
+        //System.out.println("Client - sendData - sending data to client: " + ByteConversion.printBytes(data));
         try {
             Main.sendData(data, ip, port);
         } catch (IOException e) {

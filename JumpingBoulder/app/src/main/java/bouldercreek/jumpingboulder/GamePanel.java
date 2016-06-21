@@ -222,6 +222,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
+
+        @Override
+        protected void onProgressUpdate(byte[]... values) {
+            super.onProgressUpdate(values);
+            byte [] data = values[0];
+            switch (data[0] & 0b01000000){
+                case 0b00000000:
+                    System.out.println("GamePanel - Listener - Server says we are not in game");
+                case 0b01000000 :inGame(data);
+                    break;
+            }
+
+        }
+
         private void inGame(byte[] data) {
             switch (data[0] & 0b00100000){
                 case 0b00000000: gameCountingDown(data);
@@ -233,6 +247,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         private void gameCountingDown(byte[] data) {
             System.out.println("GamePanel - Listener - Counting down");
+            player.isWaiting = false;
             int time = data[0] & 0b00000011;
             if(timeTillStart >0) {
                 player.setPlaying(false);
@@ -277,18 +292,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
-        @Override
-        protected void onProgressUpdate(byte[]... values) {
-            super.onProgressUpdate(values);
-            byte [] data = values[0];
-            switch (data[0] & 0b01000000){
-                case 0b00000000:
-                    System.out.println("GamePanel - Listener - Server says we are not in game");
-                case 0b01000000 :inGame(data);
-                    break;
-            }
-
-        }
     }
 
 }
