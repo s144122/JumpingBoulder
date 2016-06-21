@@ -1,6 +1,7 @@
 package bouldercreek.jumpingboulder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
@@ -10,6 +11,8 @@ import android.view.SurfaceView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.support.v4.app.ActivityCompat.startActivity;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
@@ -247,9 +250,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
         private void gameRunning(byte[] data) {
-
-
         }
+
+        /*
+        public void newGame(){
+            Intent newgame;
+            newgame = new Intent(GameActivity.class,MainActivity.class);
+            startActivity(newgameame);
+        }
+        */
     }
 
 }

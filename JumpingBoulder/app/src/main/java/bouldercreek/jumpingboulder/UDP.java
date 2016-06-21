@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
  * Created by jakob on 08-06-2016.
  */
 public class UDP{
-    final static String serverIP = "192.168.1.63";
+    final static String serverIP = "10.16.169.37";
     final static int serverPort = 7888;
     public static byte[] serverId = ByteConversion.convertToByte(Integer.MIN_VALUE);
     public static final int packetSize = 32;
