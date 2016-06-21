@@ -77,7 +77,7 @@ public class UDP{
         }
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, serverPort);
         socket.send(sendPacket);
-        System.out.println("UDP - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
+        //System.out.println("UDP - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
 
     }
 
