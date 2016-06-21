@@ -22,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-
-        System.out.println("Creating AsyncTask for connection");
-        new serverSetUp().execute();
+        if(ByteConversion.convertByteToInt(UDP.serverId) == Integer.MIN_VALUE) {
+            System.out.println("Creating AsyncTask for connection");
+            new serverSetUp().execute();
+        }
 
         button = (Button) findViewById(R.id.BT);
 

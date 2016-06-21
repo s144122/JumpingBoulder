@@ -105,4 +105,8 @@ public class Client {
     public int getClientId() {
         return clientId;
     }
+
+    public boolean equals(Client client){
+        return this.clientId == client.clientId;
+    }
 }
