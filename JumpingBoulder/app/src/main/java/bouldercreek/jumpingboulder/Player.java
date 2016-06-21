@@ -37,9 +37,6 @@ public class Player extends GameObject {
 
     //Variables used for sending data to server
     public boolean isWaiting = true;
-    private boolean lastMoveDirection;
-    private double lastMoveForce;
-    private int lastMoveTime;
 
 
 
@@ -121,7 +118,7 @@ public class Player extends GameObject {
         if (isWaiting){
             UDP.readyToPlay();
         }else {
-            UDP.sendMove(lastMoveDirection, lastMoveForce, lastMoveTime, x, y, gamePanel.getGameTime());
+            UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
         }
 
     }

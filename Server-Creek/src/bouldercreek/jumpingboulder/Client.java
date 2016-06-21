@@ -48,9 +48,9 @@ public class Client {
 
     private void inGame(byte[] data) {
         switch (data[4] & 0b00110000){
-            case 0b00010000: queue.add(data);
+            case 0b00100000: queue.add(data);
                 break;
-            case 0b00100000: gameEnded();
+            case 0b00010000: gameEnded();
                 break;
             case 0b00110000: readyToPlay.interrupted();
                 break;
@@ -77,7 +77,7 @@ public class Client {
             super.run();
             while (true) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     Main.waitingClient = null;
                     break;
                 } catch (InterruptedException e) {

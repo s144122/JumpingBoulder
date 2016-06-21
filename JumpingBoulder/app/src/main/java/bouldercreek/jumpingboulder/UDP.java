@@ -18,10 +18,10 @@ import java.net.UnknownHostException;
  * Created by jakob on 08-06-2016.
  */
 public class UDP{
-    final static String serverIP = "192.168.1.63";
+    final static String serverIP = "10.16.169.37";
     final static int serverPort = 7888;
     public static byte[] serverId = ByteConversion.convertToByte(Integer.MIN_VALUE);
-    public static final int packetSize = 32;
+    public static final int packetSize = 40;
     private static InetAddress ip = null;
     private static DatagramSocket socket = null;
 
@@ -77,11 +77,24 @@ public class UDP{
         }
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, serverPort);
         socket.send(sendPacket);
-        //System.out.println("UDP - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
+        System.out.println("UDP - sendData - data send to: "+ sendPacket.getAddress() +" : "+ sendPacket.getPort() );
 
     }
 
-    public static void sendMove(boolean lastMoveDirection, double lastMoveForce, int lastMoveTime, int x, int y, int gameTime) {
 
+
+    public static void sendMove(int x, int y, double dx, double dy, long gameTime) {
+        byte[] cmd = new byte[]{0b01100000};
+        byte[] xb = ByteConversion.convertToByte(x);
+        byte[] yb = ByteConversion.convertToByte(y);
+        byte[] dxb = ByteConversion.convertToByte(dx);
+        byte[] dyb = ByteConversion.convertToByte(dy);
+        byte[] gameTimeb = ByteConversion.convertToByte(gameTime);
+
+        try {
+            sendData(ByteConversion.combine(cmd,xb,yb,dxb,dyb,gameTimeb));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

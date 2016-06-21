@@ -27,7 +27,7 @@ public class MainTread extends Thread
         long waitTime;
         long totalTime = 0;
         int frameCount =0;
-        int FPS = 30;
+        int FPS = 35;
         long targetTime = 1000/ FPS;
 
 
@@ -75,5 +75,7 @@ public class MainTread extends Thread
     public void setRunning(boolean b){
         running=b;
     }
-    public long getTimeMillis(){return timeMillis;}
+    public long getTimeMillis(){
+        return timeMillis;
+    }
 }

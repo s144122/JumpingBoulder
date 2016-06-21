@@ -24,9 +24,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private ArrayList<BotBorder> botborder;
 
     //Connection variables
-    private int gameTime = 0;
+    private long gameTime = 0;
+    private long gameStartTime = 0;
     private int timeTillStart = Integer.MAX_VALUE;
-    private int opponentLastMoveTime;
+    private long opponentLastGameTime;
 
 
     public GamePanel(Context context) {
@@ -111,11 +112,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         if (timeTillStart == 0){
-            gameTime++;
+            if(gameStartTime == 0){
+                gameStartTime = System.currentTimeMillis();
+            }
             opponent.update();
             player.update();
 
             this.updateWinScreen();
+            gameTime = System.currentTimeMillis()-gameStartTime;
 
 
         } else {
@@ -188,12 +192,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         return player;
     }
 
-    public int getGameTime() {
+    public long getGameTime() {
         return gameTime;
     }
 
 
-    private class Listener extends AsyncTask<Void, Move, Void> {
+    private class Listener extends AsyncTask<Void, Void, Void> {
 
 
         @Override
@@ -232,7 +236,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 //Updates timeTillStart if it's ahead of current timeTillStart
                 //since it can never get in front of server, but might recieve a packet way later,
                 //it always chooses smalles number
-                if(timeTillStart > time*30) {
+                if(timeTillStart > time * 30) {
                     timeTillStart = time * 30;
                 }
                 player.x = ByteConversion.convertByteToInt(new byte[]{data[1],data[2],data[3],data[4]});
@@ -248,8 +252,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         private void gameRunning(byte[] data) {
 
+            long gameTime = ByteConversion.convertByteToLong(ByteConversion.subByte(data, 25,33));
+
+            if(gameTime > opponentLastGameTime) {
+                opponent.x = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 1, 5));
+                opponent.y = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 5, 9));
+                opponent.dx = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 9, 17));
+                opponent.dy = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 17, 25));
+                opponentLastGameTime = gameTime;
+            }
+
 
         }
+
+
     }
 
 }
