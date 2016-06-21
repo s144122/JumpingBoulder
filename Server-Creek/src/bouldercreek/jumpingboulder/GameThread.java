@@ -59,7 +59,7 @@ public class GameThread extends Thread {
                     data[i] = data[i+3];
                     data[i+3] = 0;
                 }
-
+                System.out.println("GameThread - run - sending move to client");
                 //This sends the data to the client who did not send it
                 if( id == client1.getClientId()){
                     client2.sendData(data);
