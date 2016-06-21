@@ -92,7 +92,7 @@ public class ByteConversionTest {
         byte[] b = new byte[]{0,1,2,3,4,5};
 
 
-        byte[] b2 = ByteConversion.subByte(b,2,5);
+        byte[] b2 = ByteConversion.subByte(b,2,3);
         byte[] b3 = new byte[]{2,3,4};
 
         for (int i=0; i<b3.length; i++) {

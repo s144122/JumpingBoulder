@@ -27,7 +27,7 @@ public class MainTread extends Thread
         long waitTime;
         long totalTime = 0;
         int frameCount =0;
-        int FPS = 35;
+        int FPS = 30;
         long targetTime = 1000/ FPS;
 
 

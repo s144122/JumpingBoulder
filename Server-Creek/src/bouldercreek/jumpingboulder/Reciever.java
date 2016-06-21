@@ -37,6 +37,7 @@ public class Reciever extends Thread {
 
             byte[] id = ByteConversion.convertToByte(client.getClientId());
             client.sendData(new byte[]{0b00100000, id[0], id[1], id[2], id[3]});
+            System.out.println("new client connected: "+id);
 
 
         } else {

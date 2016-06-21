@@ -38,10 +38,11 @@ public class Client {
     private void notInGame(byte[] data){
         switch (data[4] & 0b00100000){
             case 0b00100000:
-                new readyToPlay();
-                Main.newQuickGame(this);
+                if(Main.waitingClient == null || !Main.waitingClient.equals(clientId)) {
+                    new readyToPlay();
+                    Main.newQuickGame(this);
+                }
                 break;
-
         }
     }
 
@@ -49,7 +50,6 @@ public class Client {
     private void inGame(byte[] data) {
         switch (data[4] & 0b00110000){
             case 0b00100000:
-                System.out.println("Client - inGame - " + ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]})+ "   " + clientId);
                 queue.add(data);
                 break;
             case 0b00010000: gameEnded();

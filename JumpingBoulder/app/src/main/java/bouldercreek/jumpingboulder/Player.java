@@ -99,10 +99,12 @@ public class Player extends GameObject {
             startTime = System.nanoTime();
         }
         //#######################################################################################
-        playerJump();
-        playerMovment();
-        if(touchDelay > 0){
-            touchDelay--;
+        if(isMe) {
+            playerJump();
+            playerMovment();
+            if (touchDelay > 0) {
+                touchDelay--;
+            }
         }
 
         XL = getXL(x);
@@ -117,10 +119,8 @@ public class Player extends GameObject {
 
         if(isMe) {
             if (isWaiting) {
-                System.out.println("Player - update - player should send ready to play/waiting for opponent " + this);
                 UDP.readyToPlay();
             } else {
-                System.out.println("Player - update - player should send move " + this);
                 UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
             }
         }

@@ -29,6 +29,7 @@ public class GameThread extends Thread {
         byte[] player2DataY = ByteConversion.convertToByte(388);
 
         for (byte i=3 ; i>=0; i--){
+            cmdData[0] = (byte) (0b01000000+i);
             client1.sendData(ByteConversion.combine(cmdData,player1DataX,player1DataY,player2DataX,player2DataY));
             client2.sendData(ByteConversion.combine(cmdData,player2DataX,player2DataY,player1DataX,player1DataY));
             try {
@@ -39,37 +40,37 @@ public class GameThread extends Thread {
         }
 
         while (true) {
-            //System.out.println("GameThread - run - making thread killer");
             Thread killer = new threadKiller(this);
             killer.start();
-            //System.out.println("GameThread - run - kiler made, waiting for data");
 
             try {
-                //System.out.println("GameThread - run - thread ready to recieve moves");
                 byte[] data = queue.take();
-                System.out.println("GameThread - run - recieved data with: "+data.length+" length");
-                //System.out.println("GameThread - run - took data from queue");
                 killer.interrupt();
                 int id = ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
-                System.out.println("GameThread - run - " + id);
-                if (data.length<8){
-                    byte[] data2 = new byte[8];
-                    for (int i=0 ; i<data.length; i++){
-                        data2[i] = data[i];
-                    }
-                    data = data2;
-                }
 
                 //This loop removes the clientID from the data
-                for (int i=1; i<data.length-3; i++){
-                    data[i] = data[i+3];
-                    data[i+3] = 0;
+                for (int i=0; i<data.length-4; i++){
+                    data[i] = data[i+4];
+                    data[i+4] = 0;
                 }
-                //System.out.println("GameThread - run - sending move to client("+id+") : " + ByteConversion.printBytes(data));
                 //This sends the data to the client who did not send it
                 if( id == client1.getClientId()){
+                    int sendInfoTime = 100;
+                    if (sendInfoTime == 0){
+                        System.out.println("GameThread - run - sending move to client2 : " + ByteConversion.printBytes(data));
+                        sendInfoTime = 100;
+                    }else {
+                        sendInfoTime--;
+                    }
                     client2.sendData(data);
                 }else if(id == client2.getClientId()){
+                    int sendInfoTime2 = 100;
+                    if (sendInfoTime2 == 0){
+                        System.out.println("GameThread - run - sending move to client1 : " + ByteConversion.printBytes(data));
+                        sendInfoTime2 = 100;
+                    }else {
+                        sendInfoTime2--;
+                    }
                     client1.sendData(data);
                 }
             } catch (InterruptedException e) {

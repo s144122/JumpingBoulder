@@ -124,12 +124,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             opponent.update();
             player.update();
 
-            this.updateWinScreen();
             gameTime = System.currentTimeMillis()-gameStartTime;
 
 
-        } else {
+        } else if(timeTillStart > 0){
             timeTillStart--;
+        } else {
+            this.updateWinScreen();
         }
 
     }
@@ -203,6 +204,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
+/*
+
+    public void newGame(){
+        Intent newgame;
+        newgame = new Intent(GameActivity.class,MainActivity.class);
+        startActivity(newgameame);
+    }
+*/
+
+
+
     private class Listener extends AsyncTask<Void, byte[], Void> {
 
 
@@ -226,10 +238,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         protected void onProgressUpdate(byte[]... values) {
             super.onProgressUpdate(values);
-            byte [] data = values[0];
+            byte[] data = values[0];
             switch (data[0] & 0b01000000){
                 case 0b00000000:
                     System.out.println("GamePanel - Listener - Server says we are not in game");
+                    break;
                 case 0b01000000 :inGame(data);
                     break;
             }
@@ -237,10 +250,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void inGame(byte[] data) {
-            switch (data[0] & 0b00100000){
-                case 0b00000000: gameCountingDown(data);
+            switch (data[0] & 0b01100000){
+                case 0b01000000: gameCountingDown(data);
                     break;
-                case 0b00100000: gameRunning(data);
+                case 0b01100000: gameRunning(data);
                     break;
             }
         }
@@ -249,7 +262,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             System.out.println("GamePanel - Listener - Counting down");
             player.isWaiting = false;
             int time = data[0] & 0b00000011;
-            if(timeTillStart >0) {
+            System.out.println("GamePanel - Listener - gameCountingDown - ");
+            if(timeTillStart > 0) {
                 player.setPlaying(false);
                 //Updates timeTillStart if it's ahead of current timeTillStart
                 //since it can never get in front of server, but might recieve a packet way later,
@@ -257,9 +271,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 if(timeTillStart > time * 30) {
                     timeTillStart = time * 30;
                 }
-                System.out.println(player.x);
                 player.x = ByteConversion.convertByteToInt(new byte[]{data[1],data[2],data[3],data[4]});
-                System.out.println(player.x);
                 player.y = ByteConversion.convertByteToInt(new byte[]{data[5],data[6],data[7],data[8]});
 
 
@@ -269,23 +281,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         }
 
-        /*
-        public void newGame(){
-            Intent newgame;
-            newgame = new Intent(GameActivity.class,MainActivity.class);
-            startActivity(newgameame);
-        }
-        */
         private void gameRunning(byte[] data) {
 
 
-            long gameTime = ByteConversion.convertByteToLong(ByteConversion.subByte(data, 25,33));
+            long gameTime = ByteConversion.convertByteToLong(ByteConversion.subByte(data, 25,4));
 
             if(gameTime > opponentLastGameTime) {
-                opponent.x = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 1, 5));
-                opponent.y = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 5, 9));
-                opponent.dx = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 9, 17));
-                opponent.dy = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 17, 25));
+                opponent.x = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 1, 4));
+                System.out.println("GamePanel - Listener - gameRunning - opponent x: "+opponent.x);
+                opponent.y = ByteConversion.convertByteToInt(ByteConversion.subByte(data, 5, 4));
+                opponent.dx = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 9, 8));
+                opponent.dy = ByteConversion.convertByteToDouble(ByteConversion.subByte(data, 17, 8));
                 opponentLastGameTime = gameTime;
             }
 

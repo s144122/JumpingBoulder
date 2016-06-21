@@ -91,11 +91,11 @@ public class ByteConversion {
         return output;
     }
 
-    public static byte[] subByte(byte[] b, int start, int end){
+    public static byte[] subByte(byte[] b, int start, int length){
         //Returns a new byte array, from the start(included) index untill the end(not included) index
-        byte[] output = new byte[end-start];
+        byte[] output = new byte[length];
         int index = 0;
-        for(int i = start; i<end; i++){
+        for(int i = start; i<start+length; i++){
             output[index] = b[i];
             index++;
         }
