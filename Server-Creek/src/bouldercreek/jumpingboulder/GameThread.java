@@ -53,7 +53,6 @@ public class GameThread extends Thread {
                     }
                     data = data2;
                 }
-                data[0] = 0b01100000;
 
                 //This loop removes the clientID from the data
                 for (int i=1; i<data.length-3; i++){

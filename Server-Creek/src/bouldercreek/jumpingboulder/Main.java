@@ -15,7 +15,7 @@ public class Main {
     private static int nextClientID = Integer.MIN_VALUE;
     public static Client waitingClient = null;
     public static DatagramSocket socket = null;
-    public final static int packetSize = 32;
+    public final static int packetSize = 40;
 
     public static void main(String[] args) {
         final int serverPort = 7888;
@@ -80,10 +80,10 @@ public class Main {
         }
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, port);
         socket.send(sendPacket);
+        /*
         System.out.println("Main - sendData - data send to: "+ sendPacket.getAddress()
                 +" : "+ sendPacket.getPort()
-                + " - " + ByteConversion.printBytes(data)
-                + " to clientId:" + ByteConversion.convertByteToInt(new byte[]{data[1], data[2], data[3], data[4]}) );
-
+                + " - " + ByteConversion.printBytes(data);
+        */
     }
 }
