@@ -17,9 +17,9 @@ class Reciever extends Thread {
 
     @Override
     public void run(){
-        //System.out.println("Reciever - run - thread started");
         int clientId = ByteConversion.convertByteToInt(new byte[]{data[0], data[1], data[2], data[3]});
-        //echo the details of incoming data - client ip : client port - client message
+
+        //print the details of incoming data - client ip : client port - client message
         /*
         System.out.println("Reciever - run - Incomming data from ip: " + address
                 + " : " + port
@@ -27,7 +27,6 @@ class Reciever extends Thread {
         */
         if (clientId == Integer.MIN_VALUE) {
             Client client = new Client(Main.getNextClientID(), address, port);
-            //noinspection unchecked
             Main.clients.put(client.getClientId(), client);
 
             byte[] id = ByteConversion.convertToByte(client.getClientId());

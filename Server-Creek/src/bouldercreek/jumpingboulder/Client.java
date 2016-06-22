@@ -87,7 +87,6 @@ public class Client {
             super.run();
             while (true) {
                 try {
-                    System.out.println("Client - readyToPlay");
                     Thread.sleep(500);
                     Main.waitingClient = null;
 
