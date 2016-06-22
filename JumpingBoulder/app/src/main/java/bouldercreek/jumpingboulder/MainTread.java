@@ -73,9 +73,4 @@ public class MainTread extends Thread
     public void setRunning(boolean b){
         running=b;
     }
-
-
-    public void closeThread(){
-        Thread.interrupted();
-    }
 }
