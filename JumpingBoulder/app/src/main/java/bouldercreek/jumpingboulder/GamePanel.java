@@ -210,6 +210,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         timeTillStart = -1;
     }
+    public void closeGame(){
+        gameStartTime = 0;
+        thread.setRunning(false);
+
+    }
 
     private class Listener extends AsyncTask<Void, byte[], Void> {
 

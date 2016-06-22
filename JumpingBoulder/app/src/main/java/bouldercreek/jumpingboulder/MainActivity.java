@@ -15,18 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Intent startGame = null;
-    GamePanel gamePanel;
+    GamePanel gamePanel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //gamePanel.endGame();
-        //gamePanel.
-
-
-
-
-
+        if(gamePanel != null) {
+            gamePanel.closeGame();
+        }
 
         setContentView(R.layout.activity_main);
 
