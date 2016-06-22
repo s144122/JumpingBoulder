@@ -3,11 +3,8 @@ package bouldercreek.jumpingboulder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-/**
- * Created by jakob on 10-06-2016.
- */
+
 public class ByteConversionTest {
 
     // INTEGER VALUE TESTING #################################################################

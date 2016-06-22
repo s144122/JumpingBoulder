@@ -2,9 +2,6 @@ package bouldercreek.jumpingboulder;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by Kristian on 08-06-2016.
- */
 public class Animation {
     private Bitmap[] frames;
     private int currentFrame;
@@ -37,10 +34,6 @@ public class Animation {
     public Bitmap getImage(){
         return frames[currentFrame];
     }
-    public int getCurrentFrame(){return currentFrame;}
-    private boolean isPlayedOnce(){return playedOnce;}
-
-
 
 
 }

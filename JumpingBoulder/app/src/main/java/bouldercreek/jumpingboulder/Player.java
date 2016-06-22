@@ -3,18 +3,14 @@ package bouldercreek.jumpingboulder;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 
-/**
- * Created by Kristian on 07-06-2016.
- */
+
 public class Player extends GameObject {
-    private boolean screentouch;
-    private boolean screentouchEnd;
+    private boolean screenTouch;
+    private boolean screenTouchEnd;
     private boolean playing = true;
     private float clickX;
-    private float clickY;
     private Animation animation = new Animation();
     private long startTime;
     private int touchDelay;
@@ -89,16 +85,13 @@ public class Player extends GameObject {
         YDown = getYDown(y);
         YUp = getYUp(y);
 
-        //KRISTIAN###############################################################################
-        //BLIVER DETTE BRUGT?####################################################################
         long elapsed = (System.nanoTime() - startTime) / 1000000;
         if (elapsed > 100) {
             startTime = System.nanoTime();
         }
-        //#######################################################################################
         if(isMe) {
             playerJump();
-            playerMovment();
+            playerMovement();
             if (touchDelay > 0) {
                 touchDelay--;
             }
@@ -151,17 +144,14 @@ public class Player extends GameObject {
     public void setClickX(float f) {
         clickX = f;
     }
-    public void setClickY(float f) {
-        clickY = f;
-    }
     public void setScreenTouch(boolean b) {
-        screentouch = b;
+        screenTouch = b;
     }
     public void setScreenTouchEnd(boolean b) {
-    screentouchEnd = b;
+    screenTouchEnd = b;
     }
-    public boolean getScreenTouch(){return screentouch;}
-    public boolean getScreenTouchEnd(){return screentouchEnd;}
+    public boolean getScreenTouch(){return screenTouch;}
+    public boolean getScreenTouchEnd(){return screenTouchEnd;}
 
 
     public Rect getRectangle(){
@@ -185,7 +175,7 @@ public class Player extends GameObject {
             dy = 0;
             touchDelay = 25;
         }
-        //Rigth border
+        //Right border
         if (x > 805) {
             x = 805;
             dx = dx *-0.5;
@@ -206,7 +196,7 @@ public class Player extends GameObject {
         int OLYUp = gamePanel.getOpponent(isMe).lastYUp;
 
         //player collision
-        //Rigth side of player
+        //Right side of player
         if(inBetween(XR,OXR,OXL) && !inBetween(lastXR,OLXL,OLXR) && (inBetween(YUp,OYDown,OYUp) || inBetween(YDown,OYDown,OYUp))){
             x = getXL(gamePanel.getOpponent(isMe).XL)-2;
             dx = dx*(-1);
@@ -219,7 +209,7 @@ public class Player extends GameObject {
 
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
             y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
-            dy = dy = 0;
+            dy = 0;
             //System.out.println("Loser");
             setPlaying(false);
             gamePanel.endGame();
@@ -231,22 +221,16 @@ public class Player extends GameObject {
             gamePanel.endGame();
             setPlaying(false);
             screen = true;
-            if(screentouch){
-
-            }
         }
     }
 
     public boolean inBetween(int a, int b1, int b2){
-        if((b1 <= a && a <= b2) || (b2 <= a && a <= b1) ){
-            return true;
-        }
-        return false;
+        return (b1 <= a && a <= b2) || (b2 <= a && a <= b1);
     }
 
     //Set the speed of the player jump
     public void playerJump(){
-        if (screentouch) {
+        if (screenTouch) {
             if (jumpForce > 1.5) {
                 jumpForce = 1.5;
 
@@ -257,9 +241,9 @@ public class Player extends GameObject {
         }
     }
 
-    public void playerMovment() {
+    public void playerMovement() {
         //Touch click
-        if (screentouchEnd && touchDelay == 0) {
+        if (screenTouchEnd && touchDelay == 0) {
             //System.out.println("Touch click");
             touchDelay = 15 + (int)(4* (jumpForce));
             if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {

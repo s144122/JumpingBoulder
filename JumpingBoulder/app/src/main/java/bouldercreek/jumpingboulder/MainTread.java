@@ -1,15 +1,13 @@
 package bouldercreek.jumpingboulder;
 
-/**
- * Created by Kristian on 07-06-2016.
- */
+
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 public class MainTread extends Thread
 {
     private final SurfaceHolder surfaceHolder;
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
     private boolean running;
     public static Canvas canvas;
     private long timeMillis;
@@ -74,9 +72,6 @@ public class MainTread extends Thread
     }
     public void setRunning(boolean b){
         running=b;
-    }
-    public long getTimeMillis(){
-        return timeMillis;
     }
 
 

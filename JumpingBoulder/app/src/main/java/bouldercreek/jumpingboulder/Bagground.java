@@ -3,12 +3,9 @@ package bouldercreek.jumpingboulder;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-/**
- * Created by Kristian on 07-06-2016.
- */
 public class Bagground {
-    private Bitmap image;
-    private int x,y,dx;
+    private final Bitmap image;
+    private int x,y;
 
     public Bagground(Bitmap res){
         image = res;

@@ -1,7 +1,6 @@
 package bouldercreek.jumpingboulder;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
@@ -12,23 +11,22 @@ import android.view.SurfaceView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.support.v4.app.ActivityCompat.startActivity;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static final int WIDTH = 1669;
     public static final int HEIGHT = 769;
-    private MainTread thread;
+    private final MainTread thread;
     private Bagground bg;
     private Player player;
     private Player opponent;
-    private ArrayList<TopBorder> topborder;
-    private ArrayList<BotBorder> botborder;
+    private ArrayList<TopBorder> topBorder;
+    private ArrayList<BotBorder> botBorder;
 
     //Connection variables
     private long gameTime = 0;
     private long gameStartTime = 0;
-    private int timeTillStart = Integer.MAX_VALUE;
+    private int timeTilStart = Integer.MAX_VALUE;
     private long opponentLastGameTime;
 
     //For bug fixing
@@ -76,8 +74,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.kristian), 30, 30, 1,true,this);
         opponent = new Player(BitmapFactory.decodeResource(getResources(),R.drawable.jakob),30, 30,1,false,this);
 
-        topborder = new ArrayList<TopBorder>();
-        botborder = new ArrayList<BotBorder>();
+        topBorder = new ArrayList<TopBorder>();
+        botBorder = new ArrayList<BotBorder>();
         this.updateBottomBorder();
         this.updateTopBorder();
 
@@ -94,27 +92,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        System.out.println("GamePanel - onTouchEvent - click registrered on GamePanel: " + this);
-        if(timeTillStart == -1) {
+        System.out.println("GamePanel - onTouchEvent - click registered on GamePanel: " + this);
+        if(timeTilStart == -1) {
 //            Intent endGame = new Intent(MainActivity.class);
 //            startActivity(endGame);
-//            new newGame();
             thread.setRunning(false);
         }
 
-        //player.setScreenTouch(false);
+
         player.setScreenTouchEnd(false);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //System.out.println("Aktion Down = true");
             player.setScreenTouch(true);
             player.setScreenTouchEnd(false);
-            player.setClickY(event.getY());
             player.setClickX(event.getX());
             return true;
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (player.getScreenTouch() && !player.getScreenTouchEnd()) {
-                //System.out.println("Aktion UP = true");
                 player.setScreenTouchEnd(true);
                 player.setScreenTouch(false);
                 return true;
@@ -127,12 +121,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         if(updatesBetweenPrints == 0) {
-            System.out.println("GamePanel - update - gamepanel is updating - timTillStart: " + timeTillStart);
+            System.out.println("GamePanel - update - gamePanel is updating - timeTilStart: " + timeTilStart);
             updatesBetweenPrints = 10;
         }else{
             updatesBetweenPrints--;
         }
-        if (timeTillStart == 0){
+        if (timeTilStart == 0){
             if(gameStartTime == 0){
                 gameStartTime = System.currentTimeMillis();
             }
@@ -142,8 +136,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             gameTime = System.currentTimeMillis()-gameStartTime;
 
 
-        } else if(timeTillStart > 0){
-            timeTillStart--;
+        } else if(timeTilStart > 0){
+            timeTilStart--;
         }
 
     }
@@ -161,10 +155,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         canvas.restoreToCount(savedState);
 
         //draw collision
-        for(BotBorder bb: botborder){
+        for(BotBorder bb: botBorder){
             bb.draw(canvas);
         }
-        for(TopBorder tb: topborder){
+        for(TopBorder tb: topBorder){
             tb.draw(canvas);
         }
 
@@ -175,10 +169,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //Create bottom border
         for(int i = 0; i*20 <WIDTH*2; i++){
             if(i == 0){
-                botborder.add(new BotBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,HEIGHT+HEIGHT/4));
+                botBorder.add(new BotBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,HEIGHT+HEIGHT/4));
             }
             else {
-                botborder.add(new BotBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,HEIGHT+HEIGHT/4));
+                botBorder.add(new BotBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,HEIGHT+HEIGHT/4));
             }
         }
     }
@@ -186,10 +180,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void updateTopBorder(){
         for(int i = 0; i*20 <WIDTH*2; i++){
             if(i == 0){
-                topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,0,50));
+                topBorder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,0,50));
             }
             else {
-                topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,0,50));
+                topBorder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,0,50));
             }
         }
     }
@@ -207,13 +201,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void endGame(){
         UDP.endGame();
-        timeTillStart = -1;
-    }
-    public void closeGame(){
-        gameStartTime = 0;
-        thread.setRunning(false);
-        thread.closeThread();
-
+        timeTilStart = -1;
     }
 
     private class Listener extends AsyncTask<Void, byte[], Void> {
@@ -222,7 +210,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         @Override
         protected Void doInBackground(Void... params) {
             System.out.println("GamePanel - Listener - listener constructed: " + this);
-            while (timeTillStart >= 0) {
+            while (timeTilStart >= 0) {
                 try {
                     byte[] data = UDP.receiveData();
                     publishProgress(data);
@@ -261,7 +249,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 0b01010000:
                     System.out.println("GamePanel - Listener - inGame - should end the game");
-                    timeTillStart = -1;
+                    timeTilStart = -1;
                     break;
                 case 0b01100000: gameRunning(data);
                     break;
@@ -275,13 +263,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             player.isWaiting = false;
             int time = data[0] & 0b00000011;
             System.out.println("GamePanel - Listener - gameCountingDown - time: " + time);
-            if(timeTillStart > 0) {
+            if(timeTilStart > 0) {
                 player.setPlaying(false);
-                //Updates timeTillStart if it's ahead of current timeTillStart
+                //Updates timeTilStart if it's ahead of current timeTilStart
                 //since it can never get in front of server, but might recieve a packet way later,
                 //it always chooses smalles number
-                if(timeTillStart > time * 30) {
-                    timeTillStart = time * 30;
+                if(timeTilStart > time * 30) {
+                    timeTilStart = time * 30;
                 }
                 player.x = ByteConversion.convertByteToInt(new byte[]{data[1],data[2],data[3],data[4]});
                 player.y = ByteConversion.convertByteToInt(new byte[]{data[5],data[6],data[7],data[8]});

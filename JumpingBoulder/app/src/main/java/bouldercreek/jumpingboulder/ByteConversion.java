@@ -1,7 +1,5 @@
 package bouldercreek.jumpingboulder;
-/**
- * Created by jakob on 13-06-2016.
- */
+
 public class ByteConversion {
 
     //METHODS TO CONVERT TYPES TO BYTE ARRAYS  #######################################
@@ -75,15 +73,15 @@ public class ByteConversion {
 
     public static byte[] combine(byte[]... b){
         int bytelength = 0;
-        for (int i=0; i<b.length; i++){
-            bytelength += b[i].length;
+        for (byte[] aB : b) {
+            bytelength += aB.length;
         }
         byte[] output = new byte[bytelength];
 
         int index = 0;
-        for(int i=0; i<b.length; i++){
-            for (int j=0; j<b[i].length; j++){
-                output[index] = b[i][j];
+        for (byte[] aB : b) {
+            for (byte bB : aB) {
+                output[index] = bB;
                 index++;
             }
         }
@@ -92,7 +90,7 @@ public class ByteConversion {
 
 
     public static byte[] subByte(byte[] b, int start, int length){
-        //Returns a new byte array, from the start(included) index untill the end(not included) index
+        //Returns a new byte array, from the start(included) index until the end(not included) index
         byte[] output = new byte[length];
         int index = 0;
         for(int i = start; i<start+length; i++){

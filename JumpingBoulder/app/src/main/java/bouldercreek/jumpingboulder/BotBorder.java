@@ -3,11 +3,9 @@ package bouldercreek.jumpingboulder;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-/**
- * Created by Kristian on 08-06-2016.
- */
+
 public class BotBorder extends GameObject {
-    private Bitmap image;
+    private final Bitmap image;
     public BotBorder(Bitmap res, int x, int y){
         height = 200;
         width = 20;
