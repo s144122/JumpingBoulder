@@ -84,7 +84,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
-
     }
 
     public void winScreen(Canvas canvas){
@@ -99,7 +98,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         if(timeTillStart == -1) {
 //            Intent endGame = new Intent(MainActivity.class);
 //            startActivity(endGame);
-            new newGame();
+//            new newGame();
+            thread.setRunning(false);
         }
 
         //player.setScreenTouch(false);

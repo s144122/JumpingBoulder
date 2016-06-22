@@ -39,8 +39,6 @@ public class Player extends GameObject {
     public boolean isWaiting = true;
 
 
-
-
     public Player(Bitmap res, int w, int h, int numFrames,boolean Me,GamePanel gamepanel) {
         isMe = Me;
         if(Me) {
