@@ -47,8 +47,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //make gamePanel focusable so it can handle events
         setFocusable(true);
 
-        System.out.println("GamePanel - GamePanel - making new listener");
-        new Listener().execute();
     }
 
     @Override
@@ -86,6 +84,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
+
+        System.out.println("GamePanel - GamePanel - making new listener");
+        new Listener().execute();
     }
 
 
@@ -254,7 +255,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             switch (data[0] & 0b01100000){
                 case 0b01000000: gameCountingDown(data);
                     break;
-                case 0b01010000: endGame();
+                case 0b01010000: timeTillStart = -1;
                     break;
                 case 0b01100000: gameRunning(data);
                     break;
