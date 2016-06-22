@@ -38,6 +38,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         //add the callback to the surfaceholder to intercept events
         getHolder().addCallback(this);
 
+
+
         thread = new MainTread(getHolder(), this);
 
         //make gamePanel focusable so it can handle events
@@ -93,6 +95,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if(timeTillStart == -1) {
+//            Intent endGame = new Intent(MainActivity.class);
+//            startActivity(endGame);
+            new newGame();
+        }
+
         //player.setScreenTouch(false);
         player.setScreenTouchEnd(false);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -133,10 +142,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             this.updateWinScreen();
         }
 
-    }
-    public void movementOpponent(float x, float y,int time){
-        opponent.setClickX(x);
-        opponent.setClickY(y);
     }
 
 
@@ -202,18 +207,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void endGame(){
         timeTillStart = -1;
     }
-
-
-/*
-
-    public void newGame(){
-        Intent newgame;
-        newgame = new Intent(GameActivity.class,MainActivity.class);
-        startActivity(newgameame);
-    }
-*/
-
-
 
     private class Listener extends AsyncTask<Void, byte[], Void> {
 
