@@ -7,8 +7,8 @@ import java.util.concurrent.BlockingQueue;
  * Created by jakob on 07-06-2016.
  */
 public class GameThread extends Thread {
-    private Client client1;
-    private Client client2;
+    public Client client1;
+    public Client client2;
     private BlockingQueue<byte[]> queue;
 
     public GameThread(BlockingQueue<byte[]> queue, Client firstClient, Client secondClient) {

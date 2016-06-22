@@ -47,10 +47,12 @@ public class Client {
     }
 
 
+
     private void inGame(byte[] data) {
         switch (data[4] & 0b00110000){
             case 0b00100000:
                 queue.add(data);
+                System.out.println("Client - inGame - queue: "+ queue + " gameThread: "+game);
                 break;
             case 0b00010000: gameEnded();
                 break;
@@ -62,6 +64,9 @@ public class Client {
 
 
     private void gameEnded() {
+        game.client1.sendData(new byte[]{0b01010000});
+        game.client2.sendData(new byte[]{0b01010000});
+
         System.out.println("Client - gameEnded - game: " + game + " ended");
         game.interrupt();
         game = null;

@@ -100,4 +100,12 @@ public class UDP{
             e.printStackTrace();
         }
     }
+
+    public static void endGame() {
+        try {
+            sendData(new byte[]{0b01010000});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
