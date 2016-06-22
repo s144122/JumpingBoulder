@@ -213,6 +213,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void closeGame(){
         gameStartTime = 0;
         thread.setRunning(false);
+        thread.closeThread();
 
     }
 

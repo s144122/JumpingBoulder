@@ -78,4 +78,9 @@ public class MainTread extends Thread
     public long getTimeMillis(){
         return timeMillis;
     }
+
+
+    public void closeThread(){
+        Thread.interrupted();
+    }
 }
