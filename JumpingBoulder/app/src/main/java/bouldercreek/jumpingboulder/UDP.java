@@ -32,8 +32,7 @@ public class UDP{
         System.out.println("UDP - setUp -Setting up connection IP: "+serverIP + " port: "+serverPort);
         ip = InetAddress.getByName(serverIP);
         System.out.println("UDP - setUp -InetAddress created: " + ip);
-        socket = new DatagramSocket(null);
-        socket.connect(ip,serverPort);
+        reset();
         System.out.println("UDP - setUp - Socket established to server, getting id...");
         sendData(ByteConversion.convertToByte(Integer.MIN_VALUE));
         byte[] data = receiveData();
@@ -42,6 +41,19 @@ public class UDP{
             System.out.println("UDP - setUp - New server id is:" + ByteConversion.printBytes(serverId));
         }else{
             throw new IOException("UDP - setUp - Got wrong cmd data from server, expected 32 but got: " + data[0]);
+        }
+
+    }
+
+    public static void reset(){
+        if(!socket.isClosed()) {
+            socket.close();
+        }
+        try {
+            socket = new DatagramSocket(null);
+            socket.connect(ip,serverPort);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
