@@ -206,9 +206,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void endGame(){
-        if(timeTillStart == 0){
-            UDP.endGame();
-        }
+        UDP.endGame();
         timeTillStart = -1;
     }
     public void closeGame(){

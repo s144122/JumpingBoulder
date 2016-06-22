@@ -231,6 +231,9 @@ public class Player extends GameObject {
             gamePanel.endGame();
             setPlaying(false);
             screen = true;
+            if(screentouch){
+
+            }
         }
     }
 
