@@ -46,7 +46,7 @@ public class UDP{
     }
 
     public static void reset(){
-        if(!socket.isClosed()) {
+        if(socket != null) {
             socket.close();
         }
         try {
