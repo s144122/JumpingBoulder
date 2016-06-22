@@ -249,20 +249,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     break;
                 case 0b01000000 :inGame(data);
                     break;
+                default:
+                    System.out.println("GamePanel - Listener - onProgressUpdate - could not parse data: " + ByteConversion.printBytes(data));
             }
 
         }
 
         private void inGame(byte[] data) {
+            //0b01010000
+            //0b01110000
             switch (data[0] & 0b01110000){
                 case 0b01000000: gameCountingDown(data);
                     break;
-                case 0b01010000: timeTillStart = -1;
+                case 0b01010000:
+                    System.out.println("GamePanel - Listener - inGame - should end the game");
+                    timeTillStart = -1;
                     break;
                 case 0b01100000: gameRunning(data);
                     break;
                 default:
-                    System.out.println(ByteConversion.printBytes(data));
+                    System.out.println("GamePanel - Listener - inGame - could not parse data: " + ByteConversion.printBytes(data));
             }
         }
 

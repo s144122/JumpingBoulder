@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         if(ByteConversion.convertByteToInt(UDP.serverId) == Integer.MIN_VALUE) {
             System.out.println("Creating AsyncTask for connection");
             new serverSetUp().execute();
+        }else {
+            UDP.reset();
         }
 
         button = (Button) findViewById(R.id.BT);

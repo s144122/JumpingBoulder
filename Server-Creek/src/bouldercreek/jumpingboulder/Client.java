@@ -30,6 +30,8 @@ public class Client {
                 break;
             case 0b01000000: inGame(data);
                 break;
+            default:
+                System.out.println("Client - act - could not parse data: " + ByteConversion.printBytes(data));
         }
         lastRecievedData = data;
     }
@@ -43,6 +45,8 @@ public class Client {
                     Main.newQuickGame(this);
                 }
                 break;
+            default:
+                System.out.println("Client - notInGame - could not parse data: " + ByteConversion.printBytes(data));
         }
     }
 
@@ -58,12 +62,15 @@ public class Client {
                 break;
             case 0b00110000: readyToPlay.interrupted();
                 break;
+            default:
+                System.out.println("Client - inGame - could not parse data: "+ByteConversion.printBytes(data));
         }
     }
 
 
 
     private void gameEnded() {
+        System.out.println("Client - gameEnded - broadcasting end game to clients");
         game.client1.sendData(new byte[]{0b01010000});
         game.client2.sendData(new byte[]{0b01010000});
 
