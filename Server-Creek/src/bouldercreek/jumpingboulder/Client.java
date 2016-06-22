@@ -4,17 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.BlockingQueue;
 
-/**
- * Created by jakob on 17-06-2016.
- */
+
 public class Client {
     public GameThread game;
     private BlockingQueue<byte[]> queue;
-    private int clientId;
-    private byte[] lastRecievedData = new byte[Main.packetSize];
-    private int port;
-    private InetAddress ip;
-    private int timeSinceLastMove = 0;
+    private final int clientId;
+    private final int port;
+    private final InetAddress ip;
 
 
     public Client(int clientId, InetAddress address, int port) {
@@ -24,7 +20,6 @@ public class Client {
     }
 
     public void act(byte[] data){
-        //Checker om den længst til venstre bit er 1 eller 0, i d. 5. byte i arrayet
         switch (data[4] & 0b01000000) {
             case 0b00000000: notInGame(data);
                 break;
@@ -33,15 +28,15 @@ public class Client {
             default:
                 System.out.println("Client - act - could not parse data: " + ByteConversion.printBytes(data));
         }
-        lastRecievedData = data;
+        byte[] lastRecievedData = data;
     }
 
 
     private void notInGame(byte[] data){
         switch (data[4] & 0b00100000){
             case 0b00100000:
-                if(Main.waitingClient == null || !Main.waitingClient.equals(clientId)) {
-                    new readyToPlay();
+                if(Main.waitingClient == null || Main.waitingClient.getClientId() != clientId) {
+                    new readyToPlay().start();
                     Main.newQuickGame(this);
                 }
                 break;
@@ -84,7 +79,7 @@ public class Client {
         this.queue = queue;
     }
 
-    public class readyToPlay extends Thread{
+    private class readyToPlay extends Thread{
         //This Thread removes waiting client, if the client stops sending a ready signal
 
         @Override
@@ -92,13 +87,14 @@ public class Client {
             super.run();
             while (true) {
                 try {
+                    System.out.println("Client - readyToPlay");
                     Thread.sleep(500);
                     Main.waitingClient = null;
 
-                    System.out.println("Client: " + this + " left waiting room   - waitingclient should be null: " + Main.waitingClient);
+                    System.out.println("Client: " + this + " left waiting room   - waitingClient should be null: " + Main.waitingClient);
                     break;
                 } catch (InterruptedException e) {
-                    if (!game.equals(null)){
+                    if (game != null){
                         break;
                     }
                 }
@@ -107,7 +103,6 @@ public class Client {
     }
 
     public void sendData(byte[] data) {
-        //System.out.println("Client - sendData - sending data to client: " + ByteConversion.printBytes(data));
         try {
             Main.sendData(data, ip, port);
         } catch (IOException e) {
@@ -121,7 +116,4 @@ public class Client {
         return clientId;
     }
 
-    public boolean equals(Client client){
-        return this.clientId == client.clientId;
-    }
 }

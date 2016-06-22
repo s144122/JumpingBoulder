@@ -9,9 +9,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 
-public class Main {
+class Main {
 
-    public static Map clients = new HashMap<Integer,Client>();
+    public static final Map clients = new HashMap<Integer,Client>();
     private static int nextClientID = Integer.MIN_VALUE;
     public static Client waitingClient = null;
     public static DatagramSocket socket = null;
@@ -27,6 +27,7 @@ public class Main {
             byte[] buffer = new byte[packetSize];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
             System.out.println("Main - main - server is ready");
+            //noinspection InfiniteLoopStatement
             while (true) {
                 socket.receive(incoming);
                 //System.out.println("Main - main - recieved packet");
@@ -43,7 +44,7 @@ public class Main {
             waitingClient = client;
             System.out.println("Client: " + client + " is now waiting for an opponent");
         }else{
-            BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
+            BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
             GameThread game = new GameThread(queue,waitingClient,client);
             waitingClient.game = game;
             client.game = game;
@@ -56,7 +57,7 @@ public class Main {
 
     }
 
-    public static int getnextClientID() {
+    public static int getNextClientID() {
         nextClientID++;
 
         //this is to ensure the server never assigns a client with the default client id
@@ -68,17 +69,10 @@ public class Main {
         return nextClientID;
     }
 
-    public static void sendData(byte[] data, String address, int port) throws IOException {
-        InetAddress ip = InetAddress.getByName(address);
-        sendData(data,ip,port);
-    }
-
 
     public static void sendData(byte[] data, InetAddress ip, int port) throws IOException {
         byte[] packedData = new byte[packetSize];
-        for(int i=0; i<data.length; i++){
-            packedData[i] = data[i];
-        }
+        System.arraycopy(data, 0, packedData, 0, data.length);
         DatagramPacket sendPacket = new DatagramPacket(packedData, packedData.length, ip, port);
         socket.send(sendPacket);
         /*

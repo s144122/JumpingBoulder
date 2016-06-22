@@ -3,13 +3,11 @@ package bouldercreek.jumpingboulder;
 
 import java.util.concurrent.BlockingQueue;
 
-/**
- * Created by jakob on 07-06-2016.
- */
+
 public class GameThread extends Thread {
-    public Client client1;
-    public Client client2;
-    private BlockingQueue<byte[]> queue;
+    public final Client client1;
+    public final Client client2;
+    private final BlockingQueue<byte[]> queue;
 
     public GameThread(BlockingQueue<byte[]> queue, Client firstClient, Client secondClient) {
         this.queue = queue;
@@ -84,7 +82,7 @@ public class GameThread extends Thread {
 
     private class threadKiller extends Thread{
         private final GameThread game;
-        //This thread will interupt the game thread, if no data is sent to the queue in 1 minute
+        //This thread will interrupt the game thread, if no data is sent to the queue in 1 minute
 
         public threadKiller(GameThread game){
             this.game = game;

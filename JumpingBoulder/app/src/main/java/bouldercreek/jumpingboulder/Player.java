@@ -98,11 +98,7 @@ public class Player extends GameObject {
         }
 
         if(isMe) {
-            if (isWaiting) {
-                UDP.readyToPlay();
-            } else {
-                UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
-            }
+            UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
         }
 
         XL = getXL(x);

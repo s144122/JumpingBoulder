@@ -137,6 +137,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
         } else if(timeTilStart > 0){
+            if(timeTilStart > 500){
+                UDP.readyToPlay();
+            }
             timeTilStart--;
         }
 

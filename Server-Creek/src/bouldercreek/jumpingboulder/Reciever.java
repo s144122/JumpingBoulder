@@ -1,19 +1,13 @@
 package bouldercreek.jumpingboulder;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.util.Map;
+import java.util.Arrays;
 
-import static bouldercreek.jumpingboulder.Main.clients;
 
-/**
- * Created by jakob on 17-06-2016.
- */
-public class Reciever extends Thread {
-    private byte[] data;
-    private InetAddress address;
-    private int port;
+class Reciever extends Thread {
+    private final byte[] data;
+    private final InetAddress address;
+    private final int port;
 
     public Reciever(byte[] data, InetAddress address, int port) {
         this.data = data;
@@ -32,12 +26,13 @@ public class Reciever extends Thread {
                 + " - " + clientId);
         */
         if (clientId == Integer.MIN_VALUE) {
-            Client client = new Client(Main.getnextClientID(), address, port);
+            Client client = new Client(Main.getNextClientID(), address, port);
+            //noinspection unchecked
             Main.clients.put(client.getClientId(), client);
 
             byte[] id = ByteConversion.convertToByte(client.getClientId());
             client.sendData(new byte[]{0b00100000, id[0], id[1], id[2], id[3]});
-            System.out.println("new client connected: "+id);
+            System.out.println("new client connected: "+ Arrays.toString(id));
 
 
         } else {
