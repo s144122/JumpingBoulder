@@ -222,10 +222,10 @@ public class Player extends GameObject {
 
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
             y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
-            dy = dy*(0);
+            dy = dy = 0;
             //System.out.println("Loser");
             setPlaying(false);
-
+            gamePanel.endGame();
         }
         if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;

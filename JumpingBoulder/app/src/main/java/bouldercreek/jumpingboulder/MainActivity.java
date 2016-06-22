@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         setContentView(R.layout.activity_main);
 
         if(ByteConversion.convertByteToInt(UDP.serverId) == Integer.MIN_VALUE) {
