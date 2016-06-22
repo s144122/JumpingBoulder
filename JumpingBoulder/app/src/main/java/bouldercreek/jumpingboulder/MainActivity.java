@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Creating AsyncTask for connection");
             new serverSetUp().execute();
         }else {
-            UDP.reset();
+            new socketReset();
         }
 
         button = (Button) findViewById(R.id.BT);
@@ -67,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(s);
             TextView text = (TextView) findViewById(R.id.ServerConnectionText);
             text.setText(s);
+        }
+    }
+
+    private class socketReset extends AsyncTask<Void, Void, Void>{
+        //This method is for resetting the socket, to kill the Listener thread in GamePanel
+
+        @Override
+        protected Void doInBackground(Void... params){
+            UDP.reset();
+            return null;
         }
     }
 
