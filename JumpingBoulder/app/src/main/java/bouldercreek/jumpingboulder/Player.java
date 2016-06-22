@@ -27,7 +27,6 @@ public class Player extends GameObject {
     private int lastXR;
     private int lastYDown;
     private int lastYUp;
-    public static Canvas canvas;
     public boolean screen;
 
     //Variables used for sending data to server
@@ -100,7 +99,6 @@ public class Player extends GameObject {
         if(isMe) {
             UDP.sendMove(x, y, dx, dy, gamePanel.getGameTime());
         }
-
         XL = getXL(x);
         XR = getXR(x);
         YDown = getYDown(y);
@@ -110,9 +108,8 @@ public class Player extends GameObject {
         lastXR = getXR(lastX);
         lastYDown = getYDown(lastY);
         lastYUp = getYUp(lastY);
-
-
     }
+
     private int getXL(int X){
         return X - width/2;
     }
@@ -146,14 +143,6 @@ public class Player extends GameObject {
     public boolean getScreenTouch(){return screenTouch;}
     public boolean getScreenTouchEnd(){return screenTouchEnd;}
 
-
-    public Rect getRectangle(){
-        return new Rect(x,y, x+width, y+height);
-    }
-
-    DisplayMetrics displaymetrics = new DisplayMetrics();
-    int Height = displaymetrics.heightPixels;
-    int Width = displaymetrics.widthPixels;
 
     public void collision() {
         //Bottom border
@@ -203,14 +192,12 @@ public class Player extends GameObject {
         if(inBetween(YUp,OYDown,OYUp) && !inBetween(lastYUp,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR))){
             y = getYDown(gamePanel.getOpponent(isMe).YDown)+1;
             dy = 0;
-            //System.out.println("Loser");
             setPlaying(false);
             gamePanel.endGame();
         }
         if(inBetween(YDown,OYDown,OYUp) && !inBetween(lastYDown,OLYUp,OLYDown) && (inBetween(XL,OXL,OXR) || inBetween(XR,OXL,OXR)) ){
             y = getYUp(gamePanel.getOpponent(isMe).YUp)-1;
             dy = 0;
-            //System.out.println("Winner");
             gamePanel.endGame();
             setPlaying(false);
             screen = true;
@@ -237,20 +224,18 @@ public class Player extends GameObject {
     public void playerMovement() {
         //Touch click
         if (screenTouchEnd && touchDelay == 0) {
-            //System.out.println("Touch click");
             touchDelay = 15 + (int)(4* (jumpForce));
-            if (clickX > x * 2.5) { //GamePanel.WIDTH / 2) {
+            if (clickX > x * 2.5) {
                 dy = -15 * jumpForce;
                 dx = 10 * jumpForce;
                 setScreenTouchEnd(false);
                 jumpForce = 0.5;
 
-            } else if (clickX < x * 2.5) {//GamePanel.WIDTH / 2) {
+            } else if (clickX < x * 2.5) {
                 dy = -15 * jumpForce;
                 dx = -10 * jumpForce;
                 setScreenTouchEnd(false);
                 jumpForce = 0.5;
-
             }
         }else if (touchDelay != 0){
             setScreenTouch(false);
