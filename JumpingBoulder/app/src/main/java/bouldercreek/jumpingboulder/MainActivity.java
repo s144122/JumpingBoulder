@@ -14,6 +14,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
+    Intent startGame = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UDP.startQuickGame();
-                Intent startGame = new Intent(MainActivity.this, GameActivity.class);
+                startGame = new Intent(MainActivity.this, GameActivity.class);
                 startActivity(startGame);
             }
 

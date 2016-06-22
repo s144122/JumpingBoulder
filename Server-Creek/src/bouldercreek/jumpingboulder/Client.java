@@ -57,7 +57,6 @@ public class Client {
             case 0b00110000: readyToPlay.interrupted();
                 break;
         }
-
     }
 
 
@@ -65,6 +64,8 @@ public class Client {
     private void gameEnded() {
         System.out.println("Client - gameEnded - game: " + game + " ended");
         game.interrupt();
+        game = null;
+        queue = null;
     }
 
     public void setQueue(BlockingQueue<byte[]> queue) {
