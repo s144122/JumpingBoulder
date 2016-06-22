@@ -52,7 +52,7 @@ public class Client {
         switch (data[4] & 0b00110000){
             case 0b00100000:
                 queue.add(data);
-                System.out.println("Client - inGame - queue: "+ queue + " gameThread: "+game);
+                //System.out.println("Client - inGame - gameThread: "+game + " queue: "+ queue);
                 break;
             case 0b00010000: gameEnded();
                 break;
@@ -87,6 +87,8 @@ public class Client {
                 try {
                     Thread.sleep(500);
                     Main.waitingClient = null;
+
+                    System.out.println("Client: " + this + " left waiting room   - waitingclient should be null: " + Main.waitingClient);
                     break;
                 } catch (InterruptedException e) {
                     if (!game.equals(null)){

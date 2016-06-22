@@ -41,6 +41,7 @@ public class Main {
     public static void newQuickGame(Client client) {
         if(waitingClient == null){
             waitingClient = client;
+            System.out.println("Client: " + client + " is now waiting for an opponent");
         }else{
             BlockingQueue<byte[]> queue = new LinkedBlockingQueue<byte[]>();
             GameThread game = new GameThread(queue,waitingClient,client);

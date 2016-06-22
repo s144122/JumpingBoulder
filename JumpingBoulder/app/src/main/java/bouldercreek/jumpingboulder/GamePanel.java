@@ -94,7 +94,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        System.out.println("GamePanel - onTouchEvent - click registrered on GamePanel: " + this);
         if(timeTillStart == -1) {
 //            Intent endGame = new Intent(MainActivity.class);
 //            startActivity(endGame);
