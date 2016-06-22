@@ -15,10 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Intent startGame = null;
+    GamePanel gamePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //gamePanel.endGame();
+        //gamePanel.
+
 
 
 
