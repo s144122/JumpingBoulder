@@ -245,8 +245,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void inGame(byte[] data) {
-            //0b01010000
-            //0b01110000
             switch (data[0] & 0b01110000){
                 case 0b01000000: gameCountingDown(data);
                     break;
