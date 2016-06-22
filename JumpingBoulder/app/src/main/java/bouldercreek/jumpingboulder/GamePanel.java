@@ -31,6 +31,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private int timeTillStart = Integer.MAX_VALUE;
     private long opponentLastGameTime;
 
+    //For bug fixing
+    private int updatesBetweenPrints = 10;
+
 
     public GamePanel(Context context) {
         super(context);
@@ -120,6 +123,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public void update() {
+        if(updatesBetweenPrints == 0) {
+            System.out.println("GamePanel - update - gamepanel is updating - timTillStart: " + timeTillStart);
+            updatesBetweenPrints = 10;
+        }else{
+            updatesBetweenPrints--;
+        }
         if (timeTillStart == 0){
             if(gameStartTime == 0){
                 gameStartTime = System.currentTimeMillis();
@@ -211,8 +220,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         @Override
         protected Void doInBackground(Void... params) {
-            System.out.println("GamePanel - Listener - listener constructed");
-            while (true) {
+            System.out.println("GamePanel - Listener - listener constructed: " + this);
+            while (timeTillStart >= 0) {
                 try {
                     byte[] data = UDP.receiveData();
                     publishProgress(data);
@@ -222,6 +231,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     return null;
                 }
             }
+            return null;
 
         }
 
@@ -255,7 +265,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             System.out.println("GamePanel - Listener - Counting down");
             player.isWaiting = false;
             int time = data[0] & 0b00000011;
-            System.out.println("GamePanel - Listener - gameCountingDown - ");
+            System.out.println("GamePanel - Listener - gameCountingDown - time: " + time);
             if(timeTillStart > 0) {
                 player.setPlaying(false);
                 //Updates timeTillStart if it's ahead of current timeTillStart

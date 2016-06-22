@@ -25,6 +25,9 @@ public class UDP{
     private static InetAddress ip = null;
     private static DatagramSocket socket = null;
 
+    //For bug fixing
+    private static int updatesBetweenPrints = 10;
+
     public static void setUp() throws IOException {
         System.out.println("UDP - setUp -Setting up connection IP: "+serverIP + " port: "+serverPort);
         ip = InetAddress.getByName(serverIP);
@@ -87,9 +90,14 @@ public class UDP{
         byte[] cmd = new byte[]{0b01100000};
         byte[] xb = ByteConversion.convertToByte(x);
         byte[] yb = ByteConversion.convertToByte(y);
-        System.out.println("UDP - sendMove - y: "+y
-                + "   yb: "+ByteConversion.printBytes(yb)
-                + "   yb as convert: "+ByteConversion.convertByteToInt(yb));
+        if(updatesBetweenPrints == 0) {
+            System.out.println("UDP - sendMove - y: " + y
+                    + "   yb: " + ByteConversion.printBytes(yb)
+                    + "   yb as convert: " + ByteConversion.convertByteToInt(yb));
+            updatesBetweenPrints = 10;
+        }else {
+            updatesBetweenPrints--;
+        }
         byte[] dxb = ByteConversion.convertToByte(dx);
         byte[] dyb = ByteConversion.convertToByte(dy);
         byte[] gameTimeb = ByteConversion.convertToByte(gameTime);
