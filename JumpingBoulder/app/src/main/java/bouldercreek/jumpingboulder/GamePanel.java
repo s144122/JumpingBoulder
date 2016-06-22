@@ -22,7 +22,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Bagground bg;
     private Player player;
     private Player opponent;
-    private Winscreen winscreen;
     private ArrayList<TopBorder> topborder;
     private ArrayList<BotBorder> botborder;
 
@@ -86,11 +85,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread.start();
     }
 
-    public void winScreen(Canvas canvas){
-        super.draw(canvas);
-        winscreen = new Winscreen(BitmapFactory.decodeResource(getResources(), R.drawable.winscreen),593,150);
-        winscreen.draw(canvas);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -138,8 +132,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         } else if(timeTillStart > 0){
             timeTillStart--;
-        } else {
-            this.updateWinScreen();
         }
 
     }
@@ -188,9 +180,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),R.drawable.border),i*20,0,50));
             }
         }
-    }
-    public void updateWinScreen(){
-        new Winscreen(BitmapFactory.decodeResource(getResources(),R.drawable.winscreen),593,150);
     }
 
     public Player getOpponent(boolean isPlayer) {

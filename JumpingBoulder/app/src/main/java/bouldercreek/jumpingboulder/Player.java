@@ -31,7 +31,6 @@ public class Player extends GameObject {
     private int lastXR;
     private int lastYDown;
     private int lastYUp;
-    private Winscreen winscreen;
     public static Canvas canvas;
     public boolean screen;
 
@@ -232,8 +231,6 @@ public class Player extends GameObject {
             gamePanel.endGame();
             setPlaying(false);
             screen = true;
-            winscreen.update();
-
         }
     }
 
