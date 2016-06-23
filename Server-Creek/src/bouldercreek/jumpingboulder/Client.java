@@ -87,7 +87,7 @@ public class Client {
             super.run();
             while (true) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(10000);
                     Main.waitingClient = null;
 
                     System.out.println("Client: " + this + " left waiting room   - waitingClient should be null: " + Main.waitingClient);
